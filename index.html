@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solea AV — Audio Visual for Sacred Spaces</title>
+
+  <!-- Brand Fonts via Fontshare -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=bespoke-serif@300,400,500&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:  '#203142',
+            slate: '#4F5075',
+            silver:'#BFC0C0',
+            cream: '#F5F2EC',
+            terra: '#C96A45',
+          },
+          fontFamily: {
+            display: ['"Bespoke Serif"', 'Georgia', 'serif'],
+            body:    ['"Satoshi"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Base ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Satoshi', system-ui, sans-serif;
+      background: #F5F2EC;
+      color: #203142;
+      overflow-x: hidden;
+    }
+
+    /* ── Subtle noise texture ──────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    /* ── Typography helpers ────────────────────────────────────── */
+    .font-display { font-family: 'Bespoke Serif', Georgia, serif; }
+    .font-body    { font-family: 'Satoshi', system-ui, sans-serif; }
+
+    /* ── Section label ─────────────────────────────────────────── */
+    .label {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #C96A45;
+      display: block;
+    }
+    .label-light { color: rgba(245,242,236,0.55); }
+    .label-terra  { color: #C96A45; }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
+    #nav { transition: background 0.45s ease, box-shadow 0.45s ease; }
+    #nav.scrolled {
+      background: rgba(32,49,66,0.97) !important;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(245,242,236,0.07);
+    }
+    .nav-link {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(245,242,236,0.6);
+      text-decoration: none;
+      transition: color 0.25s ease;
+      position: relative; padding-bottom: 2px;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px; background: #C96A45;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover { color: #F5F2EC; }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link:focus-visible { outline: 2px solid #C96A45; outline-offset: 4px; border-radius: 2px; }
+
+    /* ── Buttons ───────────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-block; text-decoration: none;
+      font-family: 'Satoshi', sans-serif; font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      background: #C96A45; color: #F5F2EC;
+      padding: 0.85rem 2.2rem; border: none; cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+      box-shadow: 0 4px 18px rgba(201,106,69,0.28);
+    }
+    .btn-primary:hover { background: #b85c38; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,106,69,0.38); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid #C96A45; outline-offset: 3px; }
+
+    .btn-outline {
+      display: inline-block; text-decoration: none;
+      font-family: 'Satoshi', sans-serif; font-size: 0.72rem;
+      font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      background: transparent; color: #F5F2EC;
+      padding: 0.85rem 2.2rem;
+      border: 1px solid rgba(245,242,236,0.35); cursor: pointer;
+      transition: border-color 0.3s ease, color 0.3s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-outline:hover { border-color: rgba(245,242,236,0.8); color: #fff; transform: translateY(-2px); }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 2px solid #F5F2EC; outline-offset: 3px; }
+
+    .btn-navy {
+      display: inline-block; text-decoration: none;
+      font-family: 'Satoshi', sans-serif; font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      background: #203142; color: #F5F2EC;
+      padding: 0.85rem 2.2rem; border: none; cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 4px 18px rgba(32,49,66,0.2);
+    }
+    .btn-navy:hover { background: #2d4459; transform: translateY(-2px); }
+    .btn-navy:active { transform: translateY(0); }
+    .btn-navy:focus-visible { outline: 2px solid #203142; outline-offset: 3px; }
+
+    /* ── Section dividers ──────────────────────────────────────── */
+    .rule { border: none; height: 1px; }
+    .rule-cream { background: rgba(245,242,236,0.12); }
+    .rule-navy  { background: rgba(32,49,66,0.1); }
+
+    /* ── Service cards ─────────────────────────────────────────── */
+    .service-card {
+      background: rgba(245,242,236,0.04);
+      border: 1px solid rgba(245,242,236,0.1);
+      padding: 2.25rem 2rem;
+      transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .service-card:hover {
+      background: rgba(201,106,69,0.07);
+      border-color: rgba(201,106,69,0.3);
+      transform: translateY(-3px);
+    }
+
+    /* ── Problem cards ─────────────────────────────────────────── */
+    .problem-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(32,49,66,0.08);
+    }
+    .problem-item:last-child { border-bottom: none; }
+
+    /* ── Mobile menu ───────────────────────────────────────────── */
+    .mobile-menu {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+      background: rgba(32,49,66,0.98); backdrop-filter: blur(20px);
+    }
+    .mobile-menu.open { max-height: 480px; }
+
+    /* ── Form inputs ───────────────────────────────────────────── */
+    .form-input {
+      font-family: 'Satoshi', sans-serif; font-size: 0.88rem;
+      background: rgba(32,49,66,0.06); border: 1px solid rgba(32,49,66,0.18);
+      color: #203142; padding: 0.85rem 1.1rem; width: 100%;
+      transition: border-color 0.25s ease, background 0.25s ease; outline: none;
+    }
+    .form-input::placeholder { color: rgba(32,49,66,0.35); }
+    .form-input:focus { border-color: #C96A45; background: rgba(201,106,69,0.04); }
+    .form-input:focus-visible { outline: none; }
+    textarea.form-input { resize: vertical; min-height: 120px; }
+    select.form-input {
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%23C96A45' stroke-width='1.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
+    }
+    select.form-input option { background: #F5F2EC; color: #203142; }
+
+    /* ── Scroll reveal ─────────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+    .reveal-d5 { transition-delay: 0.5s; }
+
+    /* ── Logo filter helpers ───────────────────────────────────── */
+    /* Logo PNG is black-on-white; on dark bg invert to cream */
+    .logo-on-dark  { filter: invert(1) brightness(20) sepia(0.1) saturate(0.5); }
+    /* On cream bg use as-is (black logo) */
+    .logo-on-light { filter: none; }
+
+    /* ── Responsive grid helpers ───────────────────────────────── */
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr !important; gap: 3rem !important; }
+      .four-col { grid-template-columns: 1fr 1fr !important; }
+      .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 2.5rem !important; }
+      .hero-heading { font-size: clamp(2.8rem, 10vw, 5rem) !important; }
+    }
+    @media (max-width: 520px) {
+      .four-col { grid-template-columns: 1fr !important; }
+      .footer-grid { grid-template-columns: 1fr !important; }
+      .btn-row { flex-direction: column !important; align-items: stretch !important; }
+      .btn-row a, .btn-row button { text-align: center !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════════════════════ -->
+<header id="nav" class="fixed top-0 left-0 right-0 z-50" style="background: transparent;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex items-center justify-between" style="height:72px;">
+
+      <a href="#hero" aria-label="Solea AV">
+        <img src="brand_assets/Solea AV Ideas-02.png" alt="Solea AV"
+             class="logo-on-dark" style="height:30px; width:auto;" />
+      </a>
+
+      <nav class="hidden md:flex items-center gap-9" aria-label="Main navigation">
+        <a href="#services"  class="nav-link">Services</a>
+        <a href="#who"       class="nav-link">Who We Serve</a>
+        <a href="#about"     class="nav-link">About</a>
+        <a href="#contact"   class="nav-link">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <a href="#contact" class="hidden md:inline-block btn-primary" style="padding:0.6rem 1.5rem; font-size:0.66rem;">
+          Schedule a Consultation
+        </a>
+        <button id="menu-btn" class="md:hidden p-1 flex flex-col gap-1.5" aria-label="Menu" aria-expanded="false">
+          <span id="b1" class="block w-6 h-px bg-cream-400 transition-transform duration-300 origin-center" style="background:#F5F2EC;"></span>
+          <span id="b2" class="block w-6 h-px transition-opacity duration-300" style="background:#F5F2EC;"></span>
+          <span id="b3" class="block w-6 h-px bg-cream-400 transition-transform duration-300 origin-center" style="background:#F5F2EC;"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu md:hidden">
+    <nav class="flex flex-col px-6 py-6 gap-5" aria-label="Mobile nav">
+      <a href="#services" class="nav-link" style="font-size:0.82rem;">Services</a>
+      <a href="#who"      class="nav-link" style="font-size:0.82rem;">Who We Serve</a>
+      <a href="#about"    class="nav-link" style="font-size:0.82rem;">About</a>
+      <a href="#contact"  class="nav-link" style="font-size:0.82rem;">Contact</a>
+      <hr class="rule rule-cream" />
+      <a href="#contact" class="btn-primary" style="text-align:center;">Schedule a Consultation</a>
+    </nav>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO  (Navy on Cream on Navy — dark section)
+════════════════════════════════════════════════════════════ -->
+<section id="hero" style="background:#203142; min-height:100svh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; padding-top:72px;">
+
+  <!-- Decorative radials -->
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;">
+    <div style="position:absolute;right:-15%;top:-20%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(79,80,117,0.28),transparent 65%);"></div>
+    <div style="position:absolute;left:-10%;bottom:-25%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(201,106,69,0.07),transparent 70%);"></div>
+    <!-- Subtle horizontal rule at mid-height -->
+    <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(245,242,236,0.05) 25%,rgba(245,242,236,0.05) 75%,transparent);transform:translateY(-50%);"></div>
+    <!-- Corner marks -->
+    <div style="position:absolute;top:12%;right:7%;width:48px;height:48px;border-top:1px solid rgba(201,106,69,0.22);border-right:1px solid rgba(201,106,69,0.22);"></div>
+    <div style="position:absolute;bottom:12%;left:7%;width:48px;height:48px;border-bottom:1px solid rgba(201,106,69,0.22);border-left:1px solid rgba(201,106,69,0.22);"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-10 w-full" style="padding-top:3rem;padding-bottom:5rem;">
+    <div style="max-width:780px;">
+
+      <span class="label label-light reveal" style="color:rgba(201,106,69,0.85);">Audio Visual for Sacred Spaces</span>
+
+      <h1 class="font-display hero-heading reveal reveal-d1"
+          style="font-size:clamp(3rem,7vw,6.5rem); font-weight:300; line-height:1.05; letter-spacing:-0.025em; color:#F5F2EC; margin-top:1.25rem;">
+        Sound that serves<br/>
+        <em style="font-style:italic; color:rgba(245,242,236,0.45);">the worship.</em>
+      </h1>
+
+      <p class="font-body reveal reveal-d2"
+         style="font-size:1.05rem; line-height:1.8; color:rgba(245,242,236,0.6); max-width:540px; margin-top:2rem; font-weight:400;">
+        Solea AV designs and installs audio-visual systems built specifically for Orthodox,
+        Catholic, and high-liturgical churches — by someone who understands the liturgy from the inside.
+      </p>
+
+      <div class="reveal reveal-d3 btn-row" style="margin-top:2.5rem; display:flex; flex-wrap:wrap; gap:1rem;">
+        <a href="#services"  class="btn-primary">Explore Services</a>
+        <a href="#contact"   class="btn-outline">Schedule a Consultation</a>
+      </div>
+
+      <!-- Subtle service tags -->
+      <div class="reveal reveal-d4" style="margin-top:4rem; display:flex; flex-wrap:wrap; gap:0.75rem;">
+        <span style="font-family:'Satoshi',sans-serif; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,242,236,0.3); border:1px solid rgba(245,242,236,0.1); padding:0.35rem 0.9rem;">Sound Reinforcement</span>
+        <span style="font-family:'Satoshi',sans-serif; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,242,236,0.3); border:1px solid rgba(245,242,236,0.1); padding:0.35rem 0.9rem;">Wireless Microphones</span>
+        <span style="font-family:'Satoshi',sans-serif; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,242,236,0.3); border:1px solid rgba(245,242,236,0.1); padding:0.35rem 0.9rem;">Livestreaming</span>
+        <span style="font-family:'Satoshi',sans-serif; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,242,236,0.3); border:1px solid rgba(245,242,236,0.1); padding:0.35rem 0.9rem;">System Design</span>
+        <span style="font-family:'Satoshi',sans-serif; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,242,236,0.3); border:1px solid rgba(245,242,236,0.1); padding:0.35rem 0.9rem;">Hearing Loops</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.3;transition:opacity 0.3s ease;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='0.3'">
+    <span style="font-family:'Satoshi',sans-serif;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:#F5F2EC;">Scroll</span>
+    <div style="width:1px;height:36px;background:linear-gradient(to bottom,rgba(245,242,236,0.5),transparent);"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     THE PROBLEM  (Cream section)
+════════════════════════════════════════════════════════════ -->
+<section style="background:#F5F2EC; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start;" class="two-col">
+
+      <div>
+        <span class="label reveal">The Challenge</span>
+        <h2 class="font-display reveal reveal-d1"
+            style="font-size:clamp(2rem,3.5vw,3rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:#203142; margin-top:0.85rem;">
+          Most AV contractors treat your parish<br/>
+          <em style="font-style:italic; color:rgba(32,49,66,0.4);">like a conference room.</em>
+        </h2>
+        <p class="font-body reveal reveal-d2"
+           style="font-size:0.95rem; line-height:1.85; color:rgba(32,49,66,0.6); margin-top:1.75rem; max-width:440px;">
+          High-liturgical churches face AV challenges that a general contractor simply
+          cannot understand — because they have never stood at the kliros, watched a
+          deacon move through the nave, or heard what chant sounds like when a space
+          is properly tuned for it.
+        </p>
+        <p class="font-body reveal reveal-d3"
+           style="font-size:0.95rem; line-height:1.85; color:rgba(32,49,66,0.6); margin-top:1rem; max-width:440px;">
+          Solea AV was built from the inside out — by an Orthodox Christian and degreed
+          audio engineer who has served in these spaces and knows exactly what they need.
+        </p>
+      </div>
+
+      <div class="reveal reveal-d1">
+        <div class="problem-item">
+          <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#C96A45" stroke-width="1.2"/><line x1="7" y1="3" x2="7" y2="5" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="7" x2="7" y2="10" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Microphones that disrupt the visual reverence of the space</p>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">Ugly, visible mics at the kliros and altar that pull the eye away from the iconostasis.</p>
+          </div>
+        </div>
+
+        <div class="problem-item">
+          <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#C96A45" stroke-width="1.2"/><line x1="7" y1="3" x2="7" y2="5" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="7" x2="7" y2="10" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Clergy and chanters who cannot be heard clearly</p>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">Poor vocal clarity from improperly tuned systems that were never designed for chant.</p>
+          </div>
+        </div>
+
+        <div class="problem-item">
+          <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#C96A45" stroke-width="1.2"/><line x1="7" y1="3" x2="7" y2="5" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="7" x2="7" y2="10" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Families in the narthex who can't follow the service</p>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">No audio coverage in the narthex, cry rooms, or parish halls where young families gather.</p>
+          </div>
+        </div>
+
+        <div class="problem-item">
+          <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#C96A45" stroke-width="1.2"/><line x1="7" y1="3" x2="7" y2="5" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="7" x2="7" y2="10" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Homebound parishioners cut off from parish life</p>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">No livestreaming capability despite growing demand from the elderly and distant members of the parish.</p>
+          </div>
+        </div>
+
+        <div class="problem-item">
+          <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#C96A45" stroke-width="1.2"/><line x1="7" y1="3" x2="7" y2="5" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="7" x2="7" y2="10" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Systems too complicated for volunteers to operate</p>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">Overcomplicated setups that nobody in the parish can reliably run from Sunday to Sunday.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SERVICES  (Navy section)
+════════════════════════════════════════════════════════════ -->
+<section id="services" style="background:#203142; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:2rem; margin-bottom:3.5rem;">
+      <div>
+        <span class="label reveal" style="color:rgba(201,106,69,0.85);">What We Do</span>
+        <h2 class="font-display reveal reveal-d1"
+            style="font-size:clamp(2rem,3.5vw,3rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:#F5F2EC; margin-top:0.85rem;">
+          Liturgical AV Solutions
+        </h2>
+      </div>
+      <p class="font-body reveal reveal-d2" style="max-width:380px; font-size:0.9rem; line-height:1.8; color:rgba(245,242,236,0.5);">
+        Every service is designed with the worship space in mind — technically rigorous, visually discreet, and acoustically appropriate for sacred sound.
+      </p>
+    </div>
+
+    <hr class="rule rule-cream" style="margin-bottom:2.5rem;" />
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; background:rgba(245,242,236,0.07);" class="four-col">
+
+      <!-- Sound Reinforcement -->
+      <div class="service-card reveal" style="background:#203142;">
+        <div style="margin-bottom:1.5rem;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="4" y="13" width="7" height="10" rx="1" stroke="#C96A45" stroke-width="1"/>
+            <path d="M11 11 C11 11 18 7 18 18 C18 29 11 25 11 25" stroke="#C96A45" stroke-width="1" fill="none"/>
+            <path d="M14 8 C14 8 22 4 22 18 C22 32 14 28 14 28" stroke="rgba(201,106,69,0.4)" stroke-width="1" fill="none"/>
+            <path d="M17 5 C17 5 26 1 26 18 C26 35 17 31 17 31" stroke="rgba(201,106,69,0.2)" stroke-width="1" fill="none"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">Sound Reinforcement</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
+          Clergy microphones, choir coverage, narthex and cry room speaker systems. Tuned for the acoustics of chant, not speech in a conference room.
+        </p>
+      </div>
+
+      <!-- Wireless Systems -->
+      <div class="service-card reveal reveal-d1" style="background:#203142;">
+        <div style="margin-bottom:1.5rem;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="26" r="2.5" stroke="#C96A45" stroke-width="1"/>
+            <path d="M12 20 C12 20 15 16 18 16 C21 16 24 20 24 20" stroke="#C96A45" stroke-width="1" fill="none" stroke-linecap="round"/>
+            <path d="M8 16 C8 16 12 10 18 10 C24 10 28 16 28 16" stroke="rgba(201,106,69,0.5)" stroke-width="1" fill="none" stroke-linecap="round"/>
+            <path d="M4 12 C4 12 9 4 18 4 C27 4 32 12 32 12" stroke="rgba(201,106,69,0.25)" stroke-width="1" fill="none" stroke-linecap="round"/>
+            <line x1="18" y1="28.5" x2="18" y2="32" stroke="#C96A45" stroke-width="1"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">Wireless Microphone Systems</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
+          Proper wireless packs so the deacon doesn't hand off a microphone mid-service. Frequency-coordinated systems that work in even the most challenging RF environments.
+        </p>
+      </div>
+
+      <!-- Livestreaming -->
+      <div class="service-card reveal reveal-d2" style="background:#203142;">
+        <div style="margin-bottom:1.5rem;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="5" y="9" width="22" height="15" rx="1" stroke="#C96A45" stroke-width="1"/>
+            <polygon points="27,9 32,13 32,20 27,24" stroke="#C96A45" stroke-width="1" fill="none"/>
+            <circle cx="9" cy="12" r="1.2" fill="#C96A45"/>
+            <circle cx="9" cy="12" r="1.2" fill="none" stroke="rgba(201,106,69,0.3)" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">Livestreaming</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
+          Camera, encoder, and streaming setup for YouTube and Facebook. Keep your homebound, elderly, and distant parishioners connected to every service.
+        </p>
+      </div>
+
+      <!-- System Design & Consulting -->
+      <div class="service-card reveal reveal-d1" style="background:#203142;">
+        <div style="margin-bottom:1.5rem;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="4" y="4" width="28" height="28" rx="1" stroke="rgba(201,106,69,0.2)" stroke-width="1"/>
+            <line x1="4" y1="12" x2="32" y2="12" stroke="#C96A45" stroke-width="1"/>
+            <line x1="13" y1="4" x2="13" y2="32" stroke="#C96A45" stroke-width="1"/>
+            <circle cx="8.5" cy="8" r="1.5" fill="#C96A45"/>
+            <line x1="17" y1="20" x2="28" y2="20" stroke="rgba(201,106,69,0.5)" stroke-width="1"/>
+            <line x1="17" y1="24" x2="24" y2="24" stroke="rgba(201,106,69,0.3)" stroke-width="1"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">System Design &amp; Consulting</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
+          If your parish is hiring a general contractor, I can spec the system properly so it gets built right the first time. Proposals, equipment lists, and signal flow diagrams.
+        </p>
+      </div>
+
+      <!-- Parish Hall & Classroom AV -->
+      <div class="service-card reveal reveal-d2" style="background:#203142;">
+        <div style="margin-bottom:1.5rem;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="4" y="8" width="28" height="18" rx="1" stroke="#C96A45" stroke-width="1"/>
+            <line x1="16" y1="26" x2="12" y2="31" stroke="#C96A45" stroke-width="1"/>
+            <line x1="20" y1="26" x2="24" y2="31" stroke="#C96A45" stroke-width="1"/>
+            <rect x="9" y="13" width="18" height="8" rx="0.5" stroke="rgba(201,106,69,0.4)" stroke-width="1"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">Parish Hall &amp; Classroom AV</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
+          Projectors, screens, and basic audio for parish schools, fellowship halls, and multi-purpose spaces. Clean setups that volunteers can actually use.
+        </p>
+      </div>
+
+      <!-- Hearing Loops -->
+      <div class="service-card reveal reveal-d3" style="background:#203142;">
+        <div style="margin-bottom:1.5rem;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path d="M18 6 C10 6 4 12 4 19 C4 24 7 28 12 30 L12 26 C9 24 7 22 7 19 C7 14 12 9 18 9 C24 9 29 14 29 19 C29 22 27 24 24 26 L24 30 C29 28 32 24 32 19 C32 12 26 6 18 6Z" stroke="#C96A45" stroke-width="1" fill="none"/>
+            <path d="M18 12 C13 12 9 15.5 9 19 C9 22 11 24 14 25 L14 22 C12 21 12 20 12 19 C12 17 15 15 18 15 C21 15 24 17 24 19 C24 20 24 21 22 22 L22 25 C25 24 27 22 27 19 C27 15.5 23 12 18 12Z" stroke="rgba(201,106,69,0.5)" stroke-width="1" fill="none"/>
+            <circle cx="18" cy="19" r="2.5" fill="#C96A45"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">Hearing Loop Systems</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
+          Induction loop systems for hearing-impaired parishioners. Invisible, effective, and a genuine act of welcome for every member of the community.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="reveal" style="margin-top:3rem; text-align:center;">
+      <a href="#contact" class="btn-outline">Request a Site Survey →</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     WHO WE SERVE  (Cream section)
+════════════════════════════════════════════════════════════ -->
+<section id="who" style="background:#F5F2EC; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div style="text-align:center; margin-bottom:4rem;">
+      <span class="label reveal">Who We Serve</span>
+      <h2 class="font-display reveal reveal-d1"
+          style="font-size:clamp(2rem,3.5vw,3rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:#203142; margin-top:0.85rem;">
+        We speak your liturgical language.
+      </h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(32,49,66,0.08);" class="four-col">
+
+      <div class="reveal" style="background:#F5F2EC; padding:2.5rem 2rem; text-align:center;">
+        <div style="width:56px;height:56px;background:rgba(32,49,66,0.06);border:1px solid rgba(32,49,66,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L12 6 M6 4 L8.5 7.5 M18 4 L15.5 7.5 M12 22 C8 22 5 18 5 14 C5 10 8 8 12 8 C16 8 19 10 19 14 C19 18 16 22 12 22Z" stroke="#203142" stroke-width="1" stroke-linecap="round"/>
+            <line x1="12" y1="14" x2="12" y2="17" stroke="#C96A45" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#203142;margin-bottom:0.75rem;letter-spacing:-0.01em;">Orthodox Parishes</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(32,49,66,0.55);">
+          Greek Orthodox (GOA), Antiochian, OCA, ROCOR, Bulgarian, Romanian, Serbian, and all other jurisdictions throughout the Northeastern United States. The founder is an Orthodox Christian and Reader — this is home territory.
+        </p>
+      </div>
+
+      <div class="reveal reveal-d1" style="background:#F5F2EC; padding:2.5rem 2rem; text-align:center;">
+        <div style="width:56px;height:56px;background:rgba(32,49,66,0.06);border:1px solid rgba(32,49,66,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L12 5 M10.5 5 L13.5 5" stroke="#203142" stroke-width="1" stroke-linecap="round"/>
+            <path d="M12 5 L12 22 M7 22 L17 22 M7 13 L17 13 M9 9 L15 9" stroke="#203142" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#203142;margin-bottom:0.75rem;letter-spacing:-0.01em;">Catholic Parishes</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(32,49,66,0.55);">
+          Roman Catholic and Eastern Catholic parishes who want an installer that understands and respects the solemnity of the Mass and the beauty of the sacred space.
+        </p>
+      </div>
+
+      <div class="reveal reveal-d2" style="background:#F5F2EC; padding:2.5rem 2rem; text-align:center;">
+        <div style="width:56px;height:56px;background:rgba(32,49,66,0.06);border:1px solid rgba(32,49,66,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L12 5 M12 2 L9 5 M12 2 L15 5" stroke="#203142" stroke-width="1" stroke-linecap="round"/>
+            <path d="M5 22 C5 15 8 12 12 10 C16 12 19 15 19 22" stroke="#203142" stroke-width="1" fill="none" stroke-linecap="round"/>
+            <line x1="5" y1="22" x2="19" y2="22" stroke="#203142" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#203142;margin-bottom:0.75rem;letter-spacing:-0.01em;">Episcopal &amp; Anglican</h3>
+        <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(32,49,66,0.55);">
+          High-church Episcopal and Anglican parishes that value the dignity of their worship and need an AV partner who treats their space accordingly.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Geographic note -->
+    <div class="reveal" style="margin-top:3rem; padding:2rem 2.5rem; background:rgba(32,49,66,0.05); border-left:3px solid #C96A45;">
+      <p class="font-body" style="font-size:0.88rem;line-height:1.8;color:rgba(32,49,66,0.65);">
+        <strong style="color:#203142;font-weight:600;">Currently serving the Northeastern United States</strong> — primarily within a 3-hour drive of the Boston area, including Massachusetts, Rhode Island, Connecticut, New Hampshire, and the New York metro area. Exceptions considered for the right project.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     ABOUT THE FOUNDER  (Navy section)
+════════════════════════════════════════════════════════════ -->
+<section id="about" style="background:#203142; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center;" class="two-col">
+
+      <!-- Founder image placeholder -->
+      <div class="reveal" style="position:relative;">
+        <div style="aspect-ratio:4/5; background:rgba(79,80,117,0.3); position:relative; overflow:hidden; border:1px solid rgba(245,242,236,0.08);">
+          <img src="https://placehold.co/560x700/2d3a4f/4F5075?text=Founder+Photo" alt="Founder of Solea AV"
+               style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <!-- Subtle color treatment -->
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,106,69,0.06),transparent);mix-blend-mode:overlay;"></div>
+        </div>
+        <!-- Pull quote overlay -->
+        <div style="position:absolute;bottom:-1.5rem;right:-1.5rem;background:#C96A45;padding:1.5rem 1.75rem;max-width:240px;box-shadow:0 16px 48px rgba(32,49,66,0.3);">
+          <p class="font-display" style="font-size:1rem;font-weight:400;font-style:italic;color:#F5F2EC;line-height:1.5;">"Glory to God in all things."</p>
+        </div>
+      </div>
+
+      <!-- Copy -->
+      <div>
+        <span class="label reveal" style="color:rgba(201,106,69,0.85);">About the Founder</span>
+        <h2 class="font-display reveal reveal-d1"
+            style="font-size:clamp(1.9rem,3vw,2.75rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:#F5F2EC; margin-top:0.85rem;">
+          Built on craft.<br/>
+          <em style="font-style:italic; color:rgba(245,242,236,0.4);">Rooted in the faith.</em>
+        </h2>
+
+        <p class="font-body reveal reveal-d2"
+           style="font-size:0.92rem;line-height:1.85;color:rgba(245,242,236,0.6);margin-top:1.75rem;">
+          Solea AV is a one-person operation founded by a degreed audio engineer with professional experience in audio supervision at a major performing arts institution. More importantly, the founder is an Orthodox Christian and a Reader at his parish — someone who has stood at the kliros, served through the cycle of Great Feasts, and understands what the liturgy asks of a space.
+        </p>
+
+        <p class="font-body reveal reveal-d3"
+           style="font-size:0.92rem;line-height:1.85;color:rgba(245,242,236,0.6);margin-top:1rem;">
+          Installations have been completed at Holy Resurrection Bulgarian Orthodox Church in Boston and St. Dumitru Romanian Monastery in Middletown, NY, including parish school facilities. Both projects are referenceable — and the work speaks for itself.
+        </p>
+
+        <!-- Credential tags -->
+        <div class="reveal reveal-d4" style="margin-top:2rem; display:flex; flex-wrap:wrap; gap:0.65rem;">
+          <span style="font-family:'Satoshi',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,242,236,0.5);border:1px solid rgba(245,242,236,0.12);padding:0.4rem 0.9rem;">Degreed Audio Engineer</span>
+          <span style="font-family:'Satoshi',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,242,236,0.5);border:1px solid rgba(245,242,236,0.12);padding:0.4rem 0.9rem;">Orthodox Christian</span>
+          <span style="font-family:'Satoshi',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,242,236,0.5);border:1px solid rgba(245,242,236,0.12);padding:0.4rem 0.9rem;">Liturgical Insider</span>
+          <span style="font-family:'Satoshi',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,242,236,0.5);border:1px solid rgba(245,242,236,0.12);padding:0.4rem 0.9rem;">Northeastern US</span>
+        </div>
+
+        <div class="reveal reveal-d4" style="margin-top:2.25rem;">
+          <a href="#contact" class="btn-primary">Let's Talk About Your Parish</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     HOW IT WORKS  (Cream — light section)
+════════════════════════════════════════════════════════════ -->
+<section style="background:#F5F2EC; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div style="text-align:center; margin-bottom:4.5rem;">
+      <span class="label reveal">The Process</span>
+      <h2 class="font-display reveal reveal-d1"
+          style="font-size:clamp(2rem,3.5vw,3rem); font-weight:300; letter-spacing:-0.02em; color:#203142; margin-top:0.85rem;">
+        From conversation to commissioning.
+      </h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:0;" class="four-col">
+
+      <div class="reveal" style="padding:0 2rem 2rem 0; border-right:1px solid rgba(32,49,66,0.1);">
+        <span class="font-display" style="font-size:3rem;font-weight:300;color:rgba(32,49,66,0.12);line-height:1;letter-spacing:-0.04em;display:block;margin-bottom:1.25rem;">01</span>
+        <h3 class="font-display" style="font-size:1.2rem;font-weight:400;color:#203142;letter-spacing:-0.01em;margin-bottom:0.6rem;">Site Survey</h3>
+        <p class="font-body" style="font-size:0.82rem;line-height:1.8;color:rgba(32,49,66,0.55);">We walk the space together — nave, narthex, cry room, parish hall. I listen to the acoustics, document what's there, and understand the flow of your services.</p>
+      </div>
+
+      <div class="reveal reveal-d1" style="padding:0 2rem 2rem 2rem; border-right:1px solid rgba(32,49,66,0.1);">
+        <span class="font-display" style="font-size:3rem;font-weight:300;color:rgba(32,49,66,0.12);line-height:1;letter-spacing:-0.04em;display:block;margin-bottom:1.25rem;">02</span>
+        <h3 class="font-display" style="font-size:1.2rem;font-weight:400;color:#203142;letter-spacing:-0.01em;margin-bottom:0.6rem;">Proposal</h3>
+        <p class="font-body" style="font-size:0.82rem;line-height:1.8;color:rgba(32,49,66,0.55);">A clear scope of work, equipment list, timeline, and pricing — no surprises. Designed to be presented to a parish council or priest with confidence.</p>
+      </div>
+
+      <div class="reveal reveal-d2" style="padding:0 2rem 2rem 2rem; border-right:1px solid rgba(32,49,66,0.1);">
+        <span class="font-display" style="font-size:3rem;font-weight:300;color:rgba(32,49,66,0.12);line-height:1;letter-spacing:-0.04em;display:block;margin-bottom:1.25rem;">03</span>
+        <h3 class="font-display" style="font-size:1.2rem;font-weight:400;color:#203142;letter-spacing:-0.01em;margin-bottom:0.6rem;">Installation</h3>
+        <p class="font-body" style="font-size:0.82rem;line-height:1.8;color:rgba(32,49,66,0.55);">Clean, careful installation with respect for the sacred space. Every cable run is intentional, every component is placed with the visual reverence of the nave in mind.</p>
+      </div>
+
+      <div class="reveal reveal-d3" style="padding:0 0 2rem 2rem;">
+        <span class="font-display" style="font-size:3rem;font-weight:300;color:rgba(32,49,66,0.12);line-height:1;letter-spacing:-0.04em;display:block;margin-bottom:1.25rem;">04</span>
+        <h3 class="font-display" style="font-size:1.2rem;font-weight:400;color:#203142;letter-spacing:-0.01em;margin-bottom:0.6rem;">Training &amp; Handoff</h3>
+        <p class="font-body" style="font-size:0.82rem;line-height:1.8;color:rgba(32,49,66,0.55);">I train whoever runs sound on Sunday — volunteer or staff — so they can operate the system with confidence. Ongoing support available.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONTACT  (Navy section)
+════════════════════════════════════════════════════════════ -->
+<section id="contact" style="background:#203142; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start;" class="two-col">
+
+      <!-- Left copy -->
+      <div>
+        <span class="label reveal" style="color:rgba(201,106,69,0.85);">Get In Touch</span>
+        <h2 class="font-display reveal reveal-d1"
+            style="font-size:clamp(2rem,3.5vw,3rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:#F5F2EC; margin-top:0.85rem;">
+          Let's talk about<br/>
+          <em style="font-style:italic; color:rgba(245,242,236,0.4);">your parish.</em>
+        </h2>
+        <p class="font-body reveal reveal-d2" style="font-size:0.92rem;line-height:1.85;color:rgba(245,242,236,0.55);margin-top:1.75rem;max-width:400px;">
+          Whether you have a specific problem to solve or just a sense that your system isn't serving your worship well — reach out. A conversation is always free.
+        </p>
+
+        <div class="reveal reveal-d2" style="margin-top:2.5rem; display:flex; flex-direction:column; gap:1.5rem;">
+          <div>
+            <span class="label" style="color:rgba(201,106,69,0.7);margin-bottom:0.4rem;">Email</span>
+            <a href="mailto:hello@soleaav.com" style="font-family:'Satoshi',sans-serif;font-size:0.95rem;color:rgba(245,242,236,0.7);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.7)'">hello@soleaav.com</a>
+          </div>
+          <div>
+            <span class="label" style="color:rgba(201,106,69,0.7);margin-bottom:0.4rem;">Service Area</span>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.9rem;color:rgba(245,242,236,0.55);">Northeastern United States<br/>Boston area and surrounding region</p>
+          </div>
+        </div>
+
+        <!-- Site survey note -->
+        <div class="reveal reveal-d3" style="margin-top:2.5rem;padding:1.5rem;border:1px solid rgba(201,106,69,0.2);background:rgba(201,106,69,0.05);">
+          <p class="font-body" style="font-size:0.83rem;line-height:1.75;color:rgba(245,242,236,0.6);">
+            <strong style="color:#C96A45;font-weight:600;">Site surveys are $150–250</strong> — applied as a credit toward your project if you move forward. It's the best way to get an accurate proposal and it weeds out guesswork on both sides.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right form -->
+      <div class="reveal reveal-d2">
+        <form id="contact-form" onsubmit="handleSubmit(event)" style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+              <label for="name" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required
+                     style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
+            </div>
+            <div>
+              <label for="email" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Email</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required
+                     style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
+            </div>
+          </div>
+          <div>
+            <label for="church" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Church / Parish Name</label>
+            <input type="text" id="church" name="church" class="form-input" placeholder="St. John's Orthodox Church"
+                   style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
+          </div>
+          <div>
+            <label for="tradition" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Tradition</label>
+            <select id="tradition" name="tradition" class="form-input"
+                    style="background:rgba(32,49,66,0.95);border:1px solid rgba(245,242,236,0.12);color:rgba(245,242,236,0.8);">
+              <option value="" disabled selected>Select your tradition...</option>
+              <option value="orthodox">Orthodox Christian</option>
+              <option value="catholic-roman">Roman Catholic</option>
+              <option value="catholic-eastern">Eastern Catholic</option>
+              <option value="episcopal">Episcopal / Anglican</option>
+              <option value="other">Other / High-Liturgical</option>
+            </select>
+          </div>
+          <div>
+            <label for="service" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Primary Need</label>
+            <select id="service" name="service" class="form-input"
+                    style="background:rgba(32,49,66,0.95);border:1px solid rgba(245,242,236,0.12);color:rgba(245,242,236,0.8);">
+              <option value="" disabled selected>What can we help with?</option>
+              <option value="sound">Sound Reinforcement</option>
+              <option value="wireless">Wireless Microphones</option>
+              <option value="livestream">Livestreaming</option>
+              <option value="design">System Design / Consulting</option>
+              <option value="hall">Parish Hall or Classroom AV</option>
+              <option value="hearing">Hearing Loop</option>
+              <option value="unsure">Not sure yet — let's talk</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Tell me about your situation</label>
+            <textarea id="message" name="message" class="form-input" placeholder="Describe the problem you're trying to solve, the space, or anything else that feels relevant…"
+                      style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;"></textarea>
+          </div>
+          <div style="padding-top:0.5rem;">
+            <button type="submit" class="btn-primary" style="width:100%;text-align:center;">Send Message</button>
+          </div>
+        </form>
+        <div id="form-success" style="display:none;padding:2rem;background:rgba(201,106,69,0.08);border:1px solid rgba(201,106,69,0.25);margin-top:1rem;text-align:center;">
+          <p class="font-body" style="font-size:0.9rem;color:#C96A45;font-weight:500;">Thank you — I'll be in touch soon.</p>
+          <p class="font-body" style="font-size:0.82rem;color:rgba(245,242,236,0.5);margin-top:0.4rem;">Responses typically within one business day.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer style="background:#141f2b; padding:4rem 0 2.5rem; border-top:1px solid rgba(245,242,236,0.06);">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:4rem; margin-bottom:3.5rem;" class="footer-grid">
+
+      <div>
+        <img src="brand_assets/Solea AV Ideas-02.png" alt="Solea AV" class="logo-on-dark" style="height:26px;width:auto;margin-bottom:1.25rem;" />
+        <p class="font-body" style="font-size:0.82rem;line-height:1.85;color:rgba(245,242,236,0.35);max-width:280px;">
+          Audio visual installation, system design, and consulting for Orthodox, Catholic, and high-liturgical churches throughout the Northeastern United States.
+        </p>
+        <p class="font-display" style="font-size:0.9rem;font-style:italic;font-weight:300;color:rgba(201,106,69,0.6);margin-top:1.25rem;">
+          "Audio Visual for Sacred Spaces."
+        </p>
+      </div>
+
+      <div>
+        <h4 style="font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#C96A45;margin-bottom:1.25rem;">Services</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.65rem;">
+          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Sound Reinforcement</a></li>
+          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Wireless Microphones</a></li>
+          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Livestreaming</a></li>
+          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">System Design</a></li>
+          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Hearing Loops</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#C96A45;margin-bottom:1.25rem;">Contact</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.65rem;">
+          <li><a href="mailto:hello@soleaav.com" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">hello@soleaav.com</a></li>
+          <li><a href="#contact" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Schedule a Consultation</a></li>
+          <li><a href="#who" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Service Area</a></li>
+          <li><a href="#about" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">About</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr style="border:none;height:1px;background:rgba(245,242,236,0.07);margin-bottom:2rem;" />
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <p style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.22);">&copy; 2026 Solea AV. All rights reserved.</p>
+      <p style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.22);letter-spacing:0.12em;text-transform:uppercase;">soleaav.com</p>
+    </div>
+
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════ -->
+<script>
+  // ── Nav scroll ────────────────────────────────────────────────
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // ── Mobile menu ───────────────────────────────────────────────
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const b1 = document.getElementById('b1');
+  const b2 = document.getElementById('b2');
+  const b3 = document.getElementById('b3');
+  let open = false;
+
+  menuBtn.addEventListener('click', () => {
+    open = !open;
+    menuBtn.setAttribute('aria-expanded', open);
+    mobileMenu.classList.toggle('open', open);
+    b1.style.transform = open ? 'translateY(5.5px) rotate(45deg)' : '';
+    b2.style.opacity   = open ? '0' : '1';
+    b3.style.transform = open ? 'translateY(-5.5px) rotate(-45deg)' : '';
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    open = false;
+    menuBtn.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    b1.style.transform = ''; b2.style.opacity = '1'; b3.style.transform = '';
+  }));
+
+  // ── Scroll reveal ─────────────────────────────────────────────
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── Contact form ──────────────────────────────────────────────
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    form.style.opacity = '0'; form.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => {
+      form.style.display = 'none';
+      const s = document.getElementById('form-success');
+      s.style.display = 'block'; s.style.opacity = '0'; s.style.transition = 'opacity 0.4s ease';
+      requestAnimationFrame(() => { s.style.opacity = '1'; });
+    }, 300);
+  }
+</script>
+
+</body>
+</html>
