@@ -7,7 +7,9 @@
 
   <!-- Brand Fonts via Fontshare -->
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-  <link href="https://api.fontshare.com/v2/css?f[]=bespoke-serif@300,400,500&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=bespoke-serif@300,400,500&f[]=satoshi@300,400,500,700&display=block" rel="stylesheet" />
+  <!-- display=block ensures the font is loaded before the SVG logo renders,
+       preventing the cross from misaligning when a fallback font is briefly used -->
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -415,7 +417,7 @@
     <div style="position:absolute;bottom:12%;left:7%;width:48px;height:48px;border-bottom:1px solid rgba(201,106,69,0.22);border-left:1px solid rgba(201,106,69,0.22);"></div>
     <!-- Massive hero logo – inline SVG for full animation control -->
     <div style="position:absolute;right:8%;top:50%;transform:translateY(-50%);width:clamp(420px,48vw,680px);pointer-events:none;user-select:none;">
-      <div id="hero-logo-anim">
+      <div id="hero-logo-anim" style="visibility:hidden;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" style="display:block;width:100%;overflow:visible;">
           <defs>
             <!-- Diagonal shimmer that sweeps across periodically -->
@@ -1760,6 +1762,13 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── Hero logo: reveal only after fonts are loaded so cross aligns correctly ──
+  // document.fonts.ready resolves once all @font-face fonts have finished loading.
+  document.fonts.ready.then(() => {
+    const logo = document.getElementById('hero-logo-anim');
+    if (logo) logo.style.visibility = 'visible';
+  });
 
   // ── Contact particles ─────────────────────────────────────────
   (function () {
