@@ -603,8 +603,111 @@
 <!-- ═══════════════════════════════════════════════════════════
      THE PROBLEM  (Cream section)
 ════════════════════════════════════════════════════════════ -->
-<section style="background:#F5F2EC; padding:6rem 0;">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+<section style="background:#F5F2EC; padding:6rem 0; position:relative; overflow:hidden;">
+
+  <!-- Animated grid pattern background -->
+  <canvas id="problem-grid" aria-hidden="true"
+          style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.55;transform:skewY(6deg) scaleY(1.4);transform-origin:center;"></canvas>
+  <style>
+    #problem-grid { mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent); }
+  </style>
+  <script>
+    (function () {
+      const canvas = document.getElementById('problem-grid');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const CELL = 36;
+      const NUM_ACTIVE = 28;
+      const MAX_OPACITY = 0.13;
+      const DURATION = 3000;   // ms per flash cycle
+      const REPEAT_DELAY = 900;
+      let W, H, cols, rows, cells = [], raf;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        W = canvas.width  = rect.width;
+        H = canvas.height = rect.height * 2; // extra height for skew
+        cols = Math.ceil(W / CELL) + 1;
+        rows = Math.ceil(H / CELL) + 1;
+        initCells();
+      }
+
+      function initCells() {
+        cells = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            cells.push({ r, c, phase: -1, t: 0 });
+          }
+        }
+        activateRandom();
+      }
+
+      function activateRandom() {
+        // pick random inactive cells to start flashing
+        const inactive = cells.filter(c => c.phase === -1);
+        const picks = inactive.sort(() => Math.random() - 0.5).slice(0, NUM_ACTIVE);
+        picks.forEach(cell => {
+          cell.phase = 0;
+          cell.t = performance.now() + Math.random() * DURATION;
+        });
+      }
+
+      function draw(now) {
+        ctx.clearRect(0, 0, W, H);
+
+        // grid lines — navy at very low opacity
+        ctx.strokeStyle = 'rgba(32,49,66,0.10)';
+        ctx.lineWidth = 0.5;
+        for (let c = 0; c <= cols; c++) {
+          ctx.beginPath(); ctx.moveTo(c * CELL, 0); ctx.lineTo(c * CELL, H); ctx.stroke();
+        }
+        for (let r = 0; r <= rows; r++) {
+          ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(W, r * CELL); ctx.stroke();
+        }
+
+        let anyActive = false;
+        cells.forEach(cell => {
+          if (cell.phase === -1) return;
+          const elapsed = now - cell.t;
+
+          let alpha = 0;
+          if (elapsed < 0) { anyActive = true; return; } // waiting to start
+
+          const progress = elapsed / DURATION;
+          if (progress < 0.5) {
+            // fade in
+            alpha = (progress / 0.5) * MAX_OPACITY;
+          } else if (progress < 1) {
+            // fade out
+            alpha = ((1 - progress) / 0.5) * MAX_OPACITY;
+          } else {
+            // done — schedule restart
+            cell.phase = -1;
+            cell.t = now + REPEAT_DELAY + Math.random() * DURATION;
+            setTimeout(() => { cell.phase = 0; }, REPEAT_DELAY + Math.random() * DURATION);
+            return;
+          }
+
+          anyActive = true;
+          // fill with navy
+          ctx.fillStyle = `rgba(32,49,66,${alpha})`;
+          ctx.fillRect(cell.c * CELL + 0.5, cell.r * CELL + 0.5, CELL - 1, CELL - 1);
+        });
+
+        // re-activate straggled cells
+        const active = cells.filter(c => c.phase === 0).length;
+        if (active < NUM_ACTIVE * 0.5) activateRandom();
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+      raf = requestAnimationFrame(draw);
+    })();
+  </script>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10" style="position:relative;z-index:1;">
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start;" class="two-col">
 
@@ -816,8 +919,22 @@
 <!-- ═══════════════════════════════════════════════════════════
      WHO WE SERVE  (Cream section)
 ════════════════════════════════════════════════════════════ -->
-<section id="who" style="background:#F5F2EC; padding:6rem 0;">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+<section id="who" style="background:#F5F2EC; padding:6rem 0; position:relative; overflow:hidden;">
+
+  <!-- Striped pattern background -->
+  <svg aria-hidden="true"
+       style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;
+              mask-image:radial-gradient(ellipse 600px 500px at 50% 50%,white,transparent);
+              -webkit-mask-image:radial-gradient(ellipse 600px 500px at 50% 50%,white,transparent);">
+    <defs>
+      <pattern id="who-stripes" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#203142" stroke-width="1.5" stroke-opacity="0.08"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#who-stripes)"/>
+  </svg>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10" style="position:relative;z-index:1;">
 
     <div style="text-align:center; margin-bottom:4rem;">
       <span class="label reveal">Who We Serve</span>
@@ -870,6 +987,92 @@
 
   </div>
 </section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     ZOOM PARALLAX  — between Who We Serve and How It Works
+════════════════════════════════════════════════════════════ -->
+<div id="zp-wrap" style="position:relative; height:300vh; background:#203142;">
+  <div id="zp-sticky" style="position:sticky; top:0; height:100vh; overflow:hidden;">
+
+    <!-- Layer 0 — center, scale 1→4 -->
+    <div class="zp-layer" data-sm="3" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:37.5vh;left:37.5vw;height:25vh;width:25vw;overflow:hidden;">
+        <img src="https://placehold.co/640x360/2d4057/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+    <!-- Layer 1 — top-center-right, scale 1→5 -->
+    <div class="zp-layer" data-sm="4" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:5vh;left:37.5vw;height:30vh;width:35vw;overflow:hidden;">
+        <img src="https://placehold.co/700x480/1a2a3a/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+    <!-- Layer 2 — top-left, scale 1→6 -->
+    <div class="zp-layer" data-sm="5" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:17.5vh;left:15vw;height:45vh;width:20vw;overflow:hidden;">
+        <img src="https://placehold.co/320x720/243548/C96A45?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+    <!-- Layer 3 — center-right, scale 1→5 -->
+    <div class="zp-layer" data-sm="4" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:37.5vh;left:65vw;height:25vh;width:25vw;overflow:hidden;">
+        <img src="https://placehold.co/640x360/1e3044/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+    <!-- Layer 4 — bottom-center-right, scale 1→6 -->
+    <div class="zp-layer" data-sm="5" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:65vh;left:45vw;height:25vh;width:20vw;overflow:hidden;">
+        <img src="https://placehold.co/400x400/182838/C96A45?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+    <!-- Layer 5 — bottom-left, scale 1→8 -->
+    <div class="zp-layer" data-sm="7" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:65vh;left:12.5vw;height:25vh;width:30vw;overflow:hidden;">
+        <img src="https://placehold.co/700x400/1c2e40/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+    <!-- Layer 6 — bottom-right, scale 1→9 -->
+    <div class="zp-layer" data-sm="8" style="position:absolute;inset:0;will-change:transform;">
+      <div style="position:absolute;top:65vh;left:67.5vw;height:15vh;width:15vw;overflow:hidden;">
+        <img src="https://placehold.co/320x240/253b52/C96A45?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+  (function () {
+    const wrap   = document.getElementById('zp-wrap');
+    const layers = wrap.querySelectorAll('.zp-layer');
+    let ticking  = false;
+
+    function update() {
+      const sectionTop      = wrap.getBoundingClientRect().top + window.pageYOffset;
+      const scrollable      = wrap.offsetHeight - window.innerHeight;
+      const progress        = Math.max(0, Math.min(1, (window.pageYOffset - sectionTop) / scrollable));
+
+      layers.forEach(layer => {
+        const sm    = parseFloat(layer.dataset.sm) || 3;
+        const scale = 1 + sm * progress;
+        layer.style.transform = 'scale(' + scale + ')';
+      });
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+
+    update();
+  })();
+</script>
 
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -1014,8 +1217,39 @@
 <!-- ═══════════════════════════════════════════════════════════
      FAQ  (Cream — light section)
 ════════════════════════════════════════════════════════════ -->
-<section style="background:#F5F2EC; padding:6rem 0;">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+<section style="background:#F5F2EC; padding:6rem 0; position:relative; overflow:hidden;">
+
+  <!-- Ripple background -->
+  <style>
+    @keyframes faq-ripple {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%       { transform: translate(-50%, -50%) scale(0.92); }
+    }
+    .faq-ring {
+      position: absolute;
+      top: 28%; left: 15%;
+      border-radius: 50%;
+      border: 1px solid rgba(32,49,66,0.055);
+      background: rgba(32,49,66,0.012);
+      animation: faq-ripple 3.5s ease-in-out infinite;
+    }
+  </style>
+  <div aria-hidden="true" style="
+    position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;
+    mask-image: radial-gradient(ellipse 70% 80% at 15% 28%, white 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 15% 28%, white 30%, transparent 75%);
+  ">
+    <div class="faq-ring" style="width:210px;  height:210px;  animation-delay:0s;    border-color:rgba(201,106,69,0.09); background:rgba(201,106,69,0.018);"></div>
+    <div class="faq-ring" style="width:350px;  height:350px;  animation-delay:0.1s;"></div>
+    <div class="faq-ring" style="width:490px;  height:490px;  animation-delay:0.2s;"></div>
+    <div class="faq-ring" style="width:630px;  height:630px;  animation-delay:0.3s;"></div>
+    <div class="faq-ring" style="width:770px;  height:770px;  animation-delay:0.4s;"></div>
+    <div class="faq-ring" style="width:910px;  height:910px;  animation-delay:0.5s;"></div>
+    <div class="faq-ring" style="width:1050px; height:1050px; animation-delay:0.6s; border-style:dashed;"></div>
+    <div class="faq-ring" style="width:1190px; height:1190px; animation-delay:0.7s; border-style:dashed;"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10" style="position:relative;z-index:1;">
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start;" class="two-col">
 
