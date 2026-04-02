@@ -995,52 +995,57 @@
 <div id="zp-wrap" style="position:relative; height:300vh; background:#203142;">
   <div id="zp-sticky" style="position:sticky; top:0; height:100vh; overflow:hidden;">
 
-    <!-- Layer 0 — center, scale 1→4 -->
+    <!-- Layer 0 — center, scale 1→4. Inner image is 4× tile size, counter-scaled 0.25 so it looks
+         normal at rest but rasterizes at full res — no blur when outer scale reaches 4× -->
     <div class="zp-layer" data-sm="3" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:37.5vh;left:37.5vw;height:25vh;width:25vw;overflow:hidden;">
-        <img src="https://placehold.co/640x360/2d4057/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <div style="position:absolute;top:50%;left:50%;width:400%;height:400%;
+                    transform:translate(-50%,-50%) scale(0.25);transform-origin:center center;
+                    will-change:transform;">
+          <img src="brand_assets/churchpic1.jpg" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        </div>
       </div>
     </div>
 
     <!-- Layer 1 — top-center-right, scale 1→5 -->
     <div class="zp-layer" data-sm="4" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:5vh;left:37.5vw;height:30vh;width:35vw;overflow:hidden;">
-        <img src="https://placehold.co/700x480/1a2a3a/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <img src="brand_assets/churchpic2.jpg" style="width:100%;height:100%;object-fit:cover;" alt="" />
       </div>
     </div>
 
     <!-- Layer 2 — top-left, scale 1→6 -->
     <div class="zp-layer" data-sm="5" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:17.5vh;left:15vw;height:45vh;width:20vw;overflow:hidden;">
-        <img src="https://placehold.co/320x720/243548/C96A45?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <img src="brand_assets/churchpic4.JPG" style="width:100%;height:100%;object-fit:cover;" alt="" />
       </div>
     </div>
 
     <!-- Layer 3 — center-right, scale 1→5 -->
     <div class="zp-layer" data-sm="4" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:37.5vh;left:65vw;height:25vh;width:25vw;overflow:hidden;">
-        <img src="https://placehold.co/640x360/1e3044/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <img src="brand_assets/churchpic3.jpg" style="width:100%;height:100%;object-fit:cover;" alt="" />
       </div>
     </div>
 
     <!-- Layer 4 — bottom-center-right, scale 1→6 -->
     <div class="zp-layer" data-sm="5" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:65vh;left:45vw;height:25vh;width:20vw;overflow:hidden;">
-        <img src="https://placehold.co/400x400/182838/C96A45?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <img src="brand_assets/churchpic5.jpg" style="width:100%;height:100%;object-fit:cover;" alt="" />
       </div>
     </div>
 
     <!-- Layer 5 — bottom-left, scale 1→8 -->
     <div class="zp-layer" data-sm="7" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:65vh;left:12.5vw;height:25vh;width:30vw;overflow:hidden;">
-        <img src="https://placehold.co/700x400/1c2e40/BFC0C0?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <img src="brand_assets/konstantin-dyadyun-uM7-KJccLO4-unsplash.jpg" style="width:100%;height:100%;object-fit:cover;" alt="" />
       </div>
     </div>
 
     <!-- Layer 6 — bottom-right, scale 1→9 -->
     <div class="zp-layer" data-sm="8" style="position:absolute;inset:0;will-change:transform;">
       <div style="position:absolute;top:65vh;left:67.5vw;height:15vh;width:15vw;overflow:hidden;">
-        <img src="https://placehold.co/320x240/253b52/C96A45?text=+" style="width:100%;height:100%;object-fit:cover;" alt="" />
+        <img src="brand_assets/churchpic7.JPG" style="width:100%;height:100%;object-fit:cover;" alt="" />
       </div>
     </div>
 
@@ -1080,7 +1085,7 @@
 ════════════════════════════════════════════════════════════ -->
 
 <!-- Intro header (outside sticky tabs) -->
-<div style="background:#F5F2EC; padding:6rem 0 4rem;">
+<div id="how" style="background:#F5F2EC; padding:6rem 0 4rem;">
   <div class="max-w-7xl mx-auto px-6 lg:px-10" style="text-align:center;">
     <span class="label reveal">How It Works</span>
     <h2 class="font-display reveal reveal-d1"
@@ -1102,8 +1107,12 @@
         <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#203142;letter-spacing:-0.02em;margin:0;">Consultation</h3>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem;">
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);max-width:620px;">It starts with a conversation. Tell us about your space, your challenges, and what you are hoping to achieve. We will ask the right questions and give you an honest assessment of what is possible and what it might cost — before any commitment is made.</p>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">01</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A free, no-pressure conversation about your space and goals.</p>
+      </div>
+      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">It starts with a conversation. Tell us about your space, your challenges, and what you are hoping to achieve. We will ask the right questions and give you an honest assessment of what is possible and what it might cost before any commitment is made.</p>
     </div>
   </section>
 
@@ -1115,8 +1124,12 @@
         <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#203142;letter-spacing:-0.02em;margin:0;">Site Survey</h3>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem;">
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);max-width:620px;">We visit your parish, walk the full space, and assess everything — acoustics, existing equipment, cable pathways, liturgical flow, and the specific needs of your tradition. You will receive a written findings summary with photos.</p>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">02</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A thorough walk-through of your space, acoustics, and existing setup.</p>
+      </div>
+      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We visit your parish, walk the full space, and assess everything. Acoustics, existing equipment, cable pathways, liturgical flow, and the specific needs of your tradition. You will receive a written findings summary with photos.</p>
     </div>
   </section>
 
@@ -1128,8 +1141,12 @@
         <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#203142;letter-spacing:-0.02em;margin:0;">Proposal</h3>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem;">
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);max-width:620px;">We deliver a detailed written proposal covering the recommended system design, equipment list, project scope, timeline, and itemized pricing. No surprises, no hidden costs. We present it in person or over a call and answer every question before you decide.</p>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">03</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A detailed written proposal — no hidden costs, no surprises.</p>
+      </div>
+      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We deliver a detailed written proposal covering the recommended system design, equipment list, project scope, timeline, and itemized pricing. No surprises, no hidden costs. We present it in person or over a call and answer every question before you decide.</p>
     </div>
   </section>
 
@@ -1141,8 +1158,12 @@
         <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#203142;letter-spacing:-0.02em;margin:0;">Installation</h3>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem;">
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);max-width:620px;">We schedule work around your liturgical calendar — weekdays, off-hours, or between services. We arrive on time, work cleanly, and treat your space with the respect it deserves. Most installations are completed in one to three days.</p>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">04</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">Clean, respectful work scheduled around your liturgical calendar.</p>
+      </div>
+      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We schedule work around your liturgical calendar, weekdays, off-hours, or between services. We arrive on time, work cleanly, and treat your space with the respect it deserves. Most installations are completed in one to three days.</p>
     </div>
   </section>
 
@@ -1154,8 +1175,12 @@
         <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#203142;letter-spacing:-0.02em;margin:0;">Handoff &amp; Support</h3>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem;">
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);max-width:620px;">We design every system to be simple by intention. When the job is done, turning everything on should be a single switch — no trained operator required. We walk your team through exactly that before we leave, provide full documentation of everything installed, and remain available for questions and support after the job is done.</p>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
+      <div>
+        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">05</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">One switch. Full documentation. Ongoing support when you need it.</p>
+      </div>
+      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We design every system to be simple by intention. When the job is done, turning everything on should be a single switch — no trained operator required. We walk your team through exactly that before we leave, provide full documentation of everything installed, and remain available for questions and support after the job is done.</p>
     </div>
   </section>
 
@@ -1217,7 +1242,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      FAQ  (Cream — light section)
 ════════════════════════════════════════════════════════════ -->
-<section style="background:#F5F2EC; padding:6rem 0; position:relative; overflow:hidden;">
+<section id="faq" style="background:#F5F2EC; padding:6rem 0; position:relative; overflow:hidden;">
 
   <!-- Ripple background -->
   <style>
@@ -1492,7 +1517,7 @@
           </div>
           <div>
             <label for="message" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Tell me about your situation</label>
-            <textarea id="message" name="message" class="form-input" placeholder="Describe the problem you're trying to solve, the space, or anything else that feels relevant…"
+            <textarea id="message" name="message" class="form-input" placeholder="Describe the problem you're trying to solve, the space, or anything else that feels relevant"
                       style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;"></textarea>
           </div>
           <div>
@@ -1526,49 +1551,85 @@
 <!-- ═══════════════════════════════════════════════════════════
      FOOTER
 ════════════════════════════════════════════════════════════ -->
-<footer style="background:#141f2b; padding:4rem 0 2.5rem; border-top:1px solid rgba(245,242,236,0.06);">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+<footer style="background:#141f2b; padding:0.5rem 0 1rem; border-top:1px solid rgba(245,242,236,0.06);">
+  <div style="max-width:56rem; margin:0 auto; padding:0 1.5rem;">
 
-    <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:4rem; margin-bottom:3.5rem;" class="footer-grid">
-
-      <div>
-        <img src="brand_assets/Solea AV Ideas-02.png" alt="Solea AV" class="logo-on-dark" style="height:150px;width:auto;margin-bottom:1.25rem;" />
-        <p class="font-body" style="font-size:0.82rem;line-height:1.85;color:rgba(245,242,236,0.35);max-width:280px;">
-          Audio visual installation, system design, and consulting for Orthodox, Catholic, and high-liturgical churches throughout the Northeastern United States.
-        </p>
-        <p class="font-display" style="font-size:0.9rem;font-style:italic;font-weight:300;color:rgba(201,106,69,0.6);margin-top:1.25rem;">
-          "Audio Visual for Sacred Spaces."
-        </p>
-      </div>
-
-      <div>
-        <h4 style="font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#C96A45;margin-bottom:1.25rem;">Services</h4>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.65rem;">
-          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Sound Reinforcement</a></li>
-          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Wireless Microphones</a></li>
-          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Livestreaming</a></li>
-          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">System Design</a></li>
-          <li><a href="#services" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Hearing Loops</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 style="font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#C96A45;margin-bottom:1.25rem;">Contact</h4>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.65rem;">
-          <li><a href="mailto:info@soleaav.com" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">info@soleaav.com</a></li>
-          <li><a href="#contact" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Schedule a Consultation</a></li>
-          <li><a href="#who" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">Service Area</a></li>
-          <li><a href="#about" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.4);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.4)'">About</a></li>
-        </ul>
-      </div>
-
+    <!-- Logo centered — viewBox cropped to content (text sits ~420–640 vertically, 130–870 horizontally) -->
+    <div style="display:flex;justify-content:center;margin-bottom:0rem;">
+      <svg viewBox="50 350 900 370" style="height:120px;width:auto;" xmlns="http://www.w3.org/2000/svg" aria-label="Solea AV">
+        <defs>
+          <style>
+            .ft2-cls-2 { stroke-miterlimit:10; stroke-width:10px; }
+            .ft2-cls-2, .ft2-cls-3 { fill:#F5F2EC; stroke:#F5F2EC; }
+            .ft2-cls-3 { font-family:'Satoshi Variable','Satoshi',sans-serif; font-size:308.07px; font-weight:300; }
+          </style>
+        </defs>
+        <text class="ft2-cls-3" transform="translate(136.74 597.27) scale(1.01 .97)"><tspan x="0" y="0">Sol</tspan><tspan x="404.49" y="0">e</tspan><tspan x="561.91" y="0">a</tspan></text>
+        <line class="ft2-cls-2" x1="689.5" y1="520.35" x2="331.5" y2="520.35"/>
+        <g>
+          <line class="ft2-cls-2" x1="370.75" y1="542.92" x2="416.83" y2="569.52"/>
+          <line class="ft2-cls-2" x1="367.19" y1="488.44" x2="420.4" y2="488.44"/>
+          <line class="ft2-cls-2" x1="393.79" y1="454.56" x2="393.79" y2="590.11"/>
+        </g>
+      </svg>
     </div>
+
+    <!-- Nav links centered -->
+    <nav style="display:flex;flex-wrap:wrap;justify-content:center;gap:0.25rem 2rem;margin-bottom:0.5rem;">
+      <a href="#services" class="footer-link">Services</a>
+      <a href="#who"      class="footer-link">Who We Serve</a>
+      <a href="#how"      class="footer-link">How It Works</a>
+      <a href="#about"    class="footer-link">About</a>
+      <a href="#faq"      class="footer-link">FAQ</a>
+      <a href="#contact"  class="footer-link">Contact</a>
+    </nav>
+    <style>
+      .footer-link {
+        font-family:'Satoshi',sans-serif;
+        font-size:0.82rem;
+        color:rgba(245,242,236,0.38);
+        text-decoration:none;
+        transition:color 0.2s ease;
+      }
+      .footer-link:hover { color:#F5F2EC; }
+    </style>
+
+    <!-- Social icons centered -->
+    <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:0.5rem;">
+      <!-- Instagram -->
+      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="footer-social">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"/></svg>
+      </a>
+      <!-- Facebook -->
+      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="footer-social">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95"/></svg>
+      </a>
+      <!-- LinkedIn -->
+      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="footer-social">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/></svg>
+      </a>
+      <!-- X / Twitter -->
+      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="X" class="footer-social">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10.488 14.651L15.25 21h7l-7.858-10.478L20.93 3h-2.65l-5.117 5.886L8.75 3h-7l7.51 10.015L2.32 21h2.65zM16.25 19L5.75 5h2l10.5 14z"/></svg>
+      </a>
+    </div>
+    <style>
+      .footer-social {
+        color: rgba(245,242,236,0.3);
+        transition: color 0.2s ease;
+        display:block;
+      }
+      .footer-social:hover { color: #C96A45; }
+    </style>
 
     <hr style="border:none;height:1px;background:rgba(245,242,236,0.07);margin-bottom:2rem;" />
 
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
-      <p style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.22);">&copy; 2026 Solea AV. All rights reserved.</p>
-      <p style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.22);letter-spacing:0.12em;text-transform:uppercase;">soleaav.com</p>
+    <!-- Bottom bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.2);">&copy; 2026 Solea AV. All rights reserved.</p>
+      <p style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.2);">
+        <a href="mailto:info@soleaav.com" style="color:rgba(245,242,236,0.2);text-decoration:none;transition:color 0.2s ease;" onmouseover="this.style.color='rgba(245,242,236,0.5)'" onmouseout="this.style.color='rgba(245,242,236,0.2)'">info@soleaav.com</a>
+      </p>
     </div>
 
   </div>
@@ -1714,16 +1775,42 @@
   })();
 
   // ── Contact form ──────────────────────────────────────────────
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    form.style.opacity = '0'; form.style.transition = 'opacity 0.3s ease';
-    setTimeout(() => {
-      form.style.display = 'none';
-      const s = document.getElementById('form-success');
-      s.style.display = 'block'; s.style.opacity = '0'; s.style.transition = 'opacity 0.4s ease';
-      requestAnimationFrame(() => { s.style.opacity = '1'; });
-    }, 300);
+    const btn  = form.querySelector('[type="submit"]');
+
+    // ⚠️  Replace YOUR_FORM_ID with the ID from formspree.io/f/YOUR_FORM_ID
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgopllwv';
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method:  'POST',
+        headers: { 'Accept': 'application/json' },
+        body:    new FormData(form),
+      });
+
+      if (res.ok) {
+        form.style.opacity = '0'; form.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => {
+          form.style.display = 'none';
+          const s = document.getElementById('form-success');
+          s.style.display = 'block'; s.style.opacity = '0'; s.style.transition = 'opacity 0.4s ease';
+          requestAnimationFrame(() => { s.style.opacity = '1'; });
+        }, 300);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        alert('Something went wrong. Please email info@soleaav.com directly.');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+      alert('Something went wrong. Please email info@soleaav.com directly.');
+    }
   }
 </script>
 <script>
