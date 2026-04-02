@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solea AV — Audio Visual for Sacred Spaces</title>
@@ -68,11 +67,15 @@
     .label-terra  { color: #C96A45; }
 
     /* ── Nav ───────────────────────────────────────────────────── */
-    #nav { transition: background 0.45s ease, box-shadow 0.45s ease; }
+    #nav { transition: background 0.4s ease, box-shadow 0.4s ease; }
     #nav.scrolled {
+      background: rgba(32,49,66,0.35) !important;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 1px 0 rgba(245,242,236,0.06);
+    }
+    #nav.scrolled:hover {
       background: rgba(32,49,66,0.97) !important;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 1px 0 rgba(245,242,236,0.07);
     }
     .nav-link {
       font-family: 'Satoshi', sans-serif;
@@ -361,6 +364,8 @@
       <nav class="hidden md:flex items-center gap-9" aria-label="Main navigation">
         <a href="#services"  class="nav-link">Services</a>
         <a href="#who"       class="nav-link">Who We Serve</a>
+        <a href="#how"       class="nav-link">How It Works</a>
+        <a href="#faq"       class="nav-link">FAQ</a>
         <a href="#about"     class="nav-link">About</a>
         <a href="#contact"   class="nav-link">Contact</a>
       </nav>
@@ -380,6 +385,8 @@
     <nav class="flex flex-col px-6 py-6 gap-5" aria-label="Mobile nav">
       <a href="#services" class="nav-link" style="font-size:0.82rem;">Services</a>
       <a href="#who"      class="nav-link" style="font-size:0.82rem;">Who We Serve</a>
+      <a href="#how"      class="nav-link" style="font-size:0.82rem;">How It Works</a>
+      <a href="#faq"      class="nav-link" style="font-size:0.82rem;">FAQ</a>
       <a href="#about"    class="nav-link" style="font-size:0.82rem;">About</a>
       <a href="#contact"  class="nav-link" style="font-size:0.82rem;">Contact</a>
       <hr class="rule rule-cream" />
@@ -493,8 +500,8 @@
 
       <p class="font-body reveal reveal-d2"
          style="font-size:1.05rem; line-height:1.8; color:rgba(245,242,236,0.6); max-width:540px; margin-top:2rem; font-weight:400;">
-        Solea AV designs and installs audio-visual systems built specifically for Orthodox,
-        Catholic, and high-liturgical churches — by someone who understands the liturgy from the inside.
+        Custom AV design and installation for high-liturgical churches. 
+        We build systems that respect the liturgy, because we understand it from the inside.
       </p>
 
       <div class="reveal reveal-d3 btn-row" style="margin-top:2.5rem; display:flex; flex-wrap:wrap; gap:1rem;">
@@ -731,17 +738,17 @@
       <div class="reveal reveal-d1">
         <div class="problem-item">
           <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,1.5 13,12.5 1,12.5" stroke="#C96A45" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="5.5" x2="7" y2="9" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="11" r="0.7" fill="#C96A45"/></svg>
+            <span style="font-family:'Bespoke Serif',serif;font-size:1.25rem;font-weight:700;color:#C96A45;line-height:1;">!</span>
           </div>
           <div>
             <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Microphones that disrupt the visual reverence of the space</p>
-            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">Ugly, visible mics at the kliros and altar that pull the eye away from the iconostasis.</p>
+            <p style="font-family:'Satoshi',sans-serif;font-size:0.82rem;line-height:1.75;color:rgba(32,49,66,0.55);margin-top:0.3rem;">Distracting, prominent microphones at the kliros and altar that detract from the beauty of the iconostasis.</p>
           </div>
         </div>
 
         <div class="problem-item">
           <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,1.5 13,12.5 1,12.5" stroke="#C96A45" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="5.5" x2="7" y2="9" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="11" r="0.7" fill="#C96A45"/></svg>
+            <span style="font-family:'Bespoke Serif',serif;font-size:1.25rem;font-weight:700;color:#C96A45;line-height:1;">!</span>
           </div>
           <div>
             <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Clergy and chanters who cannot be heard clearly</p>
@@ -751,7 +758,7 @@
 
         <div class="problem-item">
           <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,1.5 13,12.5 1,12.5" stroke="#C96A45" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="5.5" x2="7" y2="9" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="11" r="0.7" fill="#C96A45"/></svg>
+            <span style="font-family:'Bespoke Serif',serif;font-size:1.25rem;font-weight:700;color:#C96A45;line-height:1;">!</span>
           </div>
           <div>
             <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Families in the narthex who can't follow the service</p>
@@ -761,7 +768,7 @@
 
         <div class="problem-item">
           <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,1.5 13,12.5 1,12.5" stroke="#C96A45" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="5.5" x2="7" y2="9" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="11" r="0.7" fill="#C96A45"/></svg>
+            <span style="font-family:'Bespoke Serif',serif;font-size:1.25rem;font-weight:700;color:#C96A45;line-height:1;">!</span>
           </div>
           <div>
             <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Homebound parishioners cut off from parish life</p>
@@ -771,7 +778,7 @@
 
         <div class="problem-item">
           <div style="flex-shrink:0;width:32px;height:32px;background:rgba(201,106,69,0.1);border:1px solid rgba(201,106,69,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px;">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,1.5 13,12.5 1,12.5" stroke="#C96A45" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="5.5" x2="7" y2="9" stroke="#C96A45" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="11" r="0.7" fill="#C96A45"/></svg>
+            <span style="font-family:'Bespoke Serif',serif;font-size:1.25rem;font-weight:700;color:#C96A45;line-height:1;">!</span>
           </div>
           <div>
             <p style="font-family:'Satoshi',sans-serif;font-weight:600;font-size:0.9rem;color:#203142;">Systems too complicated for volunteers to operate</p>
@@ -800,7 +807,7 @@
         </h2>
       </div>
       <p class="font-body reveal reveal-d2" style="max-width:380px; font-size:0.9rem; line-height:1.8; color:rgba(245,242,236,0.5);">
-        Every solution is designed with the worship space in mind. Technically rigorous, visually discreet, and acoustically appropriate for sacred sound.
+        Every solution is designed with the worship space in mind. Technically precise, visually discreet, and acoustically appropriate for sacred sound.
       </p>
     </div>
 
@@ -853,7 +860,7 @@
         </div>
         <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">Livestreaming</h3>
         <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
-          Camera, encoder, and streaming setup for YouTube and Facebook. Keep your homebound, elderly, and distant parishioners connected to every service.
+          Custom broadcast and streaming setups designed for liturgical worship. We help you reach your faithful on any device or platform, keeping your entire community united in prayer.
         </p>
       </div>
 
@@ -871,7 +878,7 @@
         </div>
         <h3 class="font-display" style="font-size:1.35rem;font-weight:400;color:#F5F2EC;letter-spacing:-0.01em;margin-bottom:0.75rem;">System Design &amp; Consulting</h3>
         <p class="font-body" style="font-size:0.83rem;line-height:1.8;color:rgba(245,242,236,0.5);">
-          If your parish is hiring a general contractor, I can spec the system properly so it gets built right the first time. Proposals, equipment lists, and signal flow diagrams.
+          If your parish is hiring a general contractor, we can spec the system properly so it gets built right the first time. Proposals, equipment lists, and signal flow diagrams.
         </p>
       </div>
 
@@ -978,12 +985,6 @@
 
     </div>
 
-    <!-- Geographic note -->
-    <div class="reveal" style="margin-top:3rem; padding:2rem 2.5rem; background:rgba(32,49,66,0.05); border-left:3px solid #C96A45;">
-      <p class="font-body" style="font-size:0.88rem;line-height:1.8;color:rgba(32,49,66,0.65);">
-        <strong style="color:#203142;font-weight:600;">Currently serving the Northeastern United States</strong> — Massachusetts, Connecticut, Rhode Island, New Hampshire, Vermont, Maine, New York, and New Jersey. Select projects considered beyond that region.
-      </p>
-    </div>
 
   </div>
 </section>
@@ -992,7 +993,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      ZOOM PARALLAX  — between Who We Serve and How It Works
 ════════════════════════════════════════════════════════════ -->
-<div id="zp-wrap" style="position:relative; height:300vh; background:#203142;">
+<div id="zp-wrap" style="position:relative; height:175vh; background:#203142;">
   <div id="zp-sticky" style="position:sticky; top:0; height:100vh; overflow:hidden;">
 
     <!-- Layer 0 — center, scale 1→4. Inner image is 4× tile size, counter-scaled 0.25 so it looks
@@ -1049,12 +1050,34 @@
       </div>
     </div>
 
+    <!-- Scroll hint -->
+    <div id="zp-hint" style="
+      position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+      pointer-events:none; z-index:20;
+      transition:opacity 0.5s ease;
+    ">
+      <span style="font-family:'Satoshi',sans-serif;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,242,236,0.8);">Scroll</span>
+      <svg width="24" height="34" viewBox="0 0 24 34" fill="none" style="animation:zp-bounce 1.6s ease-in-out infinite;">
+        <rect x="8.5" y="1" width="7" height="13" rx="3.5" stroke="rgba(245,242,236,0.8)" stroke-width="1.5"/>
+        <line x1="12" y1="5" x2="12" y2="8" stroke="#F5F2EC" stroke-width="1.5" stroke-linecap="round"/>
+        <polyline points="7,24 12,30 17,24" stroke="rgba(245,242,236,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <style>
+      @keyframes zp-bounce {
+        0%, 100% { transform: translateY(0); opacity: 1; }
+        50%       { transform: translateY(5px); opacity: 0.5; }
+      }
+    </style>
+
   </div>
 </div>
 <script>
   (function () {
     const wrap   = document.getElementById('zp-wrap');
     const layers = wrap.querySelectorAll('.zp-layer');
+    const hint   = document.getElementById('zp-hint');
     let ticking  = false;
 
     function update() {
@@ -1067,6 +1090,8 @@
         const scale = 1 + sm * progress;
         layer.style.transform = 'scale(' + scale + ')';
       });
+
+      if (hint) hint.style.opacity = progress > 0.05 ? '0' : '1';
 
       ticking = false;
     }
@@ -1110,7 +1135,7 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
       <div>
         <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">01</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A free, no-pressure conversation about your space and goals.</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A complementary consultation to discuss your sanctuary and goals. No strings attached.</p>
       </div>
       <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">It starts with a conversation. Tell us about your space, your challenges, and what you are hoping to achieve. We will ask the right questions and give you an honest assessment of what is possible and what it might cost before any commitment is made.</p>
     </div>
@@ -1144,9 +1169,9 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
       <div>
         <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">03</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A detailed written proposal — no hidden costs, no surprises.</p>
+        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A detailed written proposal — no hidden fees, no surprises.</p>
       </div>
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We deliver a detailed written proposal covering the recommended system design, equipment list, project scope, timeline, and itemized pricing. No surprises, no hidden costs. We present it in person or over a call and answer every question before you decide.</p>
+      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We deliver a detailed written proposal covering the recommended system design, equipment list, project scope, timeline, and itemized pricing. No hidden fees, no surprises. We present it in person or over a call and answer every question before you decide.</p>
     </div>
   </section>
 
@@ -1204,10 +1229,45 @@
           <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,106,69,0.06),transparent);mix-blend-mode:overlay;"></div>
         </div>
         <!-- Pull quote overlay -->
-        <div style="position:absolute;bottom:-1.5rem;right:-1.5rem;background:#C96A45;padding:1.5rem 1.75rem;max-width:240px;box-shadow:0 16px 48px rgba(32,49,66,0.3);">
+        <div id="founder-tag" style="position:absolute;bottom:-1.5rem;right:-1.5rem;background:#C96A45;padding:1.5rem 1.75rem;max-width:240px;box-shadow:0 16px 48px rgba(32,49,66,0.3);
+             transform:translateY(12px);opacity:0;transition:transform 0.7s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s ease;">
+          <!-- Animated corner accent -->
+          <div style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;">
+            <div id="founder-shimmer" style="position:absolute;top:0;left:-100%;width:60%;height:100%;
+              background:linear-gradient(90deg,transparent,rgba(245,242,236,0.15),transparent);
+              transform:skewX(-15deg);"></div>
+          </div>
           <p class="font-display" style="font-size:1rem;font-weight:400;color:#F5F2EC;line-height:1.5;">Andrei Radu</p>
           <p class="font-body" style="font-size:0.65rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.65);margin-top:0.35rem;">Founder</p>
         </div>
+        <style>
+          @keyframes founder-shimmer {
+            0%   { left: -100%; }
+            100% { left: 160%; }
+          }
+        </style>
+        <script>
+          (function () {
+            const tag = document.getElementById('founder-tag');
+            const shimmer = document.getElementById('founder-shimmer');
+            if (!tag) return;
+            const io = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  setTimeout(() => {
+                    tag.style.transform = 'translateY(0)';
+                    tag.style.opacity   = '1';
+                    setTimeout(() => {
+                      shimmer.style.animation = 'founder-shimmer 0.8s ease forwards';
+                    }, 500);
+                  }, 350);
+                  io.disconnect();
+                }
+              });
+            }, { threshold: 0.4 });
+            io.observe(tag);
+          })();
+        </script>
       </div>
 
       <!-- Copy -->
@@ -1289,6 +1349,18 @@
         <p class="font-body reveal reveal-d2" style="font-size:0.92rem;line-height:1.85;color:rgba(32,49,66,0.55);margin-top:1.5rem;max-width:360px;">
           If something isn't covered here, reach out — a conversation is always free.
         </p>
+        <a href="#contact" class="reveal reveal-d3" style="
+          display:inline-block; margin-top:1.5rem;
+          font-family:'Satoshi',sans-serif; font-size:0.78rem; font-weight:600;
+          letter-spacing:0.12em; text-transform:uppercase; text-decoration:none;
+          color:#C96A45; border:1px solid rgba(201,106,69,0.4);
+          padding:0.65rem 1.4rem;
+          transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        "
+        onmouseover="this.style.background='#C96A45';this.style.color='#F5F2EC';this.style.borderColor='#C96A45';"
+        onmouseout="this.style.background='transparent';this.style.color='#C96A45';this.style.borderColor='rgba(201,106,69,0.4)';">
+          Get In Touch
+        </a>
       </div>
 
       <!-- Right accordion -->
@@ -1366,7 +1438,7 @@
             <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,7 8,3" stroke="#203142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <div class="faq-body">
-            <div class="faq-body-inner">The site survey is where everything starts. We visit your space, walk the nave, narthex, and any auxiliary rooms, assess your acoustics, document your existing setup, and listen to how your parish uses the space. From there we design a system around your actual liturgical needs — not a generic package. Site surveys are $250 and that fee is credited toward your project if you move forward.</div>
+            <div class="faq-body-inner">A comprehensive on-site assessment of your sanctuary, from cable pathways to liturgical flow. We document your existing setup and listen to how your parish actually uses the space to ensure the design is built for your tradition—not a generic package. You will receive a written findings summary with photos to guide the project.<br><br>The $250 survey fee is fully credited toward your project if you move forward.</div>
           </div>
         </div>
 
@@ -1376,7 +1448,7 @@
             <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,7 8,3" stroke="#203142" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <div class="faq-body">
-            <div class="faq-body-inner">Yes. We offer maintenance arrangements for parishes who want a reliable point of contact for troubleshooting, seasonal checkups, and system adjustments over time. Ask us about this when we meet.</div>
+            <div class="faq-body-inner">Yes. We offer service agreements to provide your parish with priority troubleshooting and periodic system optimization. We act as your dedicated technical resource, ensuring your AV remains transparent and reliable year-round.</div>
           </div>
         </div>
 
@@ -1464,7 +1536,7 @@
         <!-- Free conversation note -->
         <div class="reveal reveal-d3" style="margin-top:2.5rem;padding:1.5rem;border:1px solid rgba(201,106,69,0.2);background:rgba(201,106,69,0.05);">
           <p class="font-body" style="font-size:0.83rem;line-height:1.75;color:rgba(245,242,236,0.6);">
-            <strong style="color:#C96A45;font-weight:600;">A conversation is always free.</strong> No commitment, no pressure. If we're a good fit, we'll know pretty quickly — and if we're not, we'll tell you that too.
+            <strong style="color:#C96A45;font-weight:600;">Conversations are always complementary.</strong> No sales pitch, no obligation. If we aren't the right fit for your parish, we'll be the first to tell you.
           </p>
         </div>
       </div>
@@ -1475,23 +1547,28 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label for="name" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Name</label>
-              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required
+              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required maxlength="100" autocomplete="name"
                      style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
             </div>
             <div>
               <label for="email" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Email</label>
-              <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required
+              <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required maxlength="254" autocomplete="email"
                      style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
             </div>
           </div>
           <div>
+            <label for="phone" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Phone Number</label>
+            <input type="tel" id="phone" name="phone" class="form-input" placeholder="(000) 000-0000" required maxlength="14" autocomplete="tel"
+                   style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
+          </div>
+          <div>
             <label for="church" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Church / Parish Name</label>
-            <input type="text" id="church" name="church" class="form-input" placeholder="St. John's Orthodox Church"
+            <input type="text" id="church" name="church" class="form-input" placeholder="St. John's Orthodox Church" required maxlength="150" autocomplete="organization"
                    style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;" />
           </div>
           <div>
             <label for="tradition" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Tradition</label>
-            <select id="tradition" name="tradition" class="form-input"
+            <select id="tradition" name="tradition" class="form-input" required
                     style="background:rgba(32,49,66,0.95);border:1px solid rgba(245,242,236,0.12);color:rgba(245,242,236,0.8);">
               <option value="" disabled selected>Select your tradition...</option>
               <option value="orthodox">Orthodox Christian</option>
@@ -1503,35 +1580,40 @@
           </div>
           <div>
             <label for="service" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Primary Need</label>
-            <select id="service" name="service" class="form-input"
+            <select id="service" name="service" class="form-input" required
                     style="background:rgba(32,49,66,0.95);border:1px solid rgba(245,242,236,0.12);color:rgba(245,242,236,0.8);">
-              <option value="" disabled selected>What can we help with?</option>
+              <option value="" disabled selected>How can we help?</option>
               <option value="sound">Sound Reinforcement</option>
               <option value="wireless">Wireless Microphones</option>
               <option value="livestream">Livestreaming</option>
               <option value="design">System Design / Consulting</option>
               <option value="hall">Parish Hall or Classroom AV</option>
               <option value="hearing">Hearing Loop</option>
-              <option value="unsure">Not sure yet — let's talk</option>
+              <option value="unsure">Not Sure Yet — Let's Talk</option>
             </select>
           </div>
           <div>
-            <label for="message" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Tell me about your situation</label>
-            <textarea id="message" name="message" class="form-input" placeholder="Describe the problem you're trying to solve, the space, or anything else that feels relevant"
+            <label for="message" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">Tell us about your situation <span style="color:rgba(245,242,236,0.25);font-size:0.6rem;">(optional)</span></label>
+            <textarea id="message" name="message" class="form-input" placeholder="Describe the problem you're trying to solve, the space, or anything else that feels relevant" maxlength="2000"
                       style="background:rgba(245,242,236,0.05);border:1px solid rgba(245,242,236,0.12);color:#F5F2EC;"></textarea>
           </div>
           <div>
             <label for="referral" style="display:block;font-family:'Satoshi',sans-serif;font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,242,236,0.45);margin-bottom:0.45rem;">How did you hear about us?</label>
-            <select id="referral" name="referral" class="form-input"
+            <select id="referral" name="referral" class="form-input" required
                     style="background:rgba(32,49,66,0.95);border:1px solid rgba(245,242,236,0.12);color:rgba(245,242,236,0.8);">
               <option value="" disabled selected>Select one…</option>
-              <option value="word-of-mouth">Word of mouth / referral</option>
-              <option value="google">Google search</option>
-              <option value="social-media">Social media</option>
-              <option value="parish-network">Parish or diocese network</option>
-              <option value="clergy">Clergy recommendation</option>
+              <option value="word-of-mouth">Referral</option>
+              <option value="google">Google</option>
+              <option value="social-media">Social Media</option>
+              <option value="parish-network">Parish or Diocese Network</option>
+              <option value="clergy">Clergy Recommendation</option>
               <option value="other">Other</option>
             </select>
+          </div>
+          <!-- Honeypot: hidden from humans, bots fill it; submission rejected if non-empty (OWASP bot mitigation) -->
+          <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+            <label for="_hp">Leave this blank</label>
+            <input type="text" id="_hp" name="_hp" tabindex="-1" autocomplete="off" />
           </div>
           <div style="padding-top:0.5rem;">
             <button type="submit" class="btn-primary" style="width:100%;text-align:center;">Send Message</button>
@@ -1775,22 +1857,120 @@
   })();
 
   // ── Contact form ──────────────────────────────────────────────
+  // Phone auto-format: strips non-digits, applies (XXX) XXX-XXXX mask
+  (function () {
+    const phone = document.getElementById('phone');
+    if (!phone) return;
+    phone.addEventListener('input', function (e) {
+      let digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+      let formatted = '';
+      if (digits.length > 0) formatted = '(' + digits.slice(0, 3);
+      if (digits.length >= 4) formatted += ') ' + digits.slice(3, 6);
+      if (digits.length >= 7) formatted += '-' + digits.slice(6, 10);
+      e.target.value = formatted;
+    });
+  })();
+
+  // ── handleSubmit: hardened per OWASP input validation guidelines ──
+  // Defense layers:
+  //   1. Honeypot check   — reject bots that fill the hidden _hp field
+  //   2. Client-side rate limiting — one submission per 60 s per session
+  //   3. Schema validation — type, length, allowlist for enum fields
+  //   4. Strip HTML tags  — neutralise any attempted XSS payloads before sending
+  // Note: Formspree enforces its own server-side rate limiting (50 req/month on
+  // free tier). Enable domain restriction in your Formspree dashboard so the
+  // endpoint only accepts POST from soleaav.com (Settings → Allowed Origins).
+
+  const _FORM_RATE_LIMIT_MS = 60_000; // 1 submission per 60 s per browser session
+  let _lastSubmitTime = 0;
+
+  // Strip HTML tags to prevent stored XSS if Formspree ever reflects data back.
+  function sanitize(str) {
+    return String(str).replace(/<[^>]*>/g, '').trim();
+  }
+
+  // Field schema: [name, type, maxLength, required]
+  const FIELD_SCHEMA = [
+    ['name',      'text',   100,  true],
+    ['email',     'email',  254,  true],
+    ['phone',     'tel',    14,   true],
+    ['church',    'text',   150,  true],
+    ['tradition', 'enum',   null, true,  ['orthodox','catholic-roman','catholic-eastern','episcopal','other']],
+    ['service',   'enum',   null, true,  ['sound','wireless','livestream','design','hall','hearing','unsure']],
+    ['message',   'text',   2000, false],
+    ['referral',  'enum',   null, true,  ['word-of-mouth','google','social-media','parish-network','clergy','other']],
+  ];
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
   async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const btn  = form.querySelector('[type="submit"]');
 
-    // ⚠️  Replace YOUR_FORM_ID with the ID from formspree.io/f/YOUR_FORM_ID
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgopllwv';
+    // 1. Honeypot check — bots fill hidden fields; humans leave them blank
+    const hp = form.querySelector('[name="_hp"]');
+    if (hp && hp.value.trim() !== '') {
+      // Silently succeed to fool bots; do not actually submit
+      form.style.opacity = '0';
+      setTimeout(() => {
+        form.style.display = 'none';
+        const s = document.getElementById('form-success');
+        s.style.display = 'block'; s.style.opacity = '0'; s.style.transition = 'opacity 0.4s ease';
+        requestAnimationFrame(() => { s.style.opacity = '1'; });
+      }, 300);
+      return;
+    }
+
+    // 2. Client-side rate limiting — prevent accidental or scripted double-submit
+    const now = Date.now();
+    if (now - _lastSubmitTime < _FORM_RATE_LIMIT_MS) {
+      const remaining = Math.ceil((_FORM_RATE_LIMIT_MS - (now - _lastSubmitTime)) / 1000);
+      btn.textContent = `Please wait ${remaining}s`;
+      setTimeout(() => { btn.textContent = 'Send Message'; }, remaining * 1000);
+      return;
+    }
+
+    // 3. Schema validation & sanitization
+    const data = new FormData();
+    for (const [field, type, maxLen, required, allowed] of FIELD_SCHEMA) {
+      const el  = form.querySelector(`[name="${field}"]`);
+      const raw = el ? el.value : '';
+      const val = sanitize(raw); // 4. Strip HTML tags
+
+      if (required && val === '') {
+        el && el.focus();
+        btn.textContent = 'Send Message';
+        return;
+      }
+      if (maxLen && val.length > maxLen) {
+        el && el.focus();
+        btn.textContent = 'Send Message';
+        return;
+      }
+      if (type === 'email' && val && !EMAIL_RE.test(val)) {
+        el && el.focus();
+        btn.textContent = 'Send Message';
+        return;
+      }
+      if (type === 'enum' && val && allowed && !allowed.includes(val)) {
+        // Reject unexpected enum values (guards against field tampering)
+        return;
+      }
+      if (val) data.append(field, val);
+    }
 
     btn.disabled = true;
     btn.textContent = 'Sending…';
+    _lastSubmitTime = Date.now();
+
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgopllwv';
 
     try {
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method:  'POST',
         headers: { 'Accept': 'application/json' },
-        body:    new FormData(form),
+        body:    data,
       });
 
       if (res.ok) {
@@ -1804,24 +1984,15 @@
       } else {
         btn.disabled = false;
         btn.textContent = 'Send Message';
+        _lastSubmitTime = 0; // allow retry on server error
         alert('Something went wrong. Please email info@soleaav.com directly.');
       }
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Send Message';
+      _lastSubmitTime = 0;
       alert('Something went wrong. Please email info@soleaav.com directly.');
     }
-  }
-</script>
-<script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
-        });
-      }
-    });
   }
 </script>
 <script type="module">
