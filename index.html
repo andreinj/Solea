@@ -431,7 +431,7 @@
             <!-- Mask so shimmer only hits the logo shapes -->
             <mask id="hl-logo-mask">
               <text transform="translate(136.74 597.27) scale(1.01 .97)"
-                    style="font-family:'Satoshi',sans-serif;font-size:308.07px;font-weight:300;fill:white;">
+                    style="font-family:'Satoshi Variable','Satoshi',sans-serif;font-size:308.07px;font-weight:300;font-variation-settings:'wght' 300;fill:white;">
                 <tspan x="0" y="0">Sol</tspan><tspan x="404.49" y="0">e</tspan><tspan x="561.91" y="0">a</tspan>
               </text>
               <line x1="689.5" y1="520.35" x2="331.5" y2="520.35" stroke="white" stroke-width="10"/>
@@ -442,15 +442,15 @@
           </defs>
 
           <!-- Text — fades in on load -->
-          <text transform="translate(136.74 597.27) scale(1.01 .97)"
+          <text id="hl-text" transform="translate(136.74 597.27) scale(1.01 .97)"
                 opacity="0"
-                style="font-family:'Satoshi',sans-serif;font-size:308.07px;font-weight:300;fill:#F5F2EC;stroke:#F5F2EC;stroke-width:0.5;">
+                style="font-family:'Satoshi Variable','Satoshi',sans-serif;font-size:308.07px;font-weight:300;font-variation-settings:'wght' 300;fill:#F5F2EC;stroke:#F5F2EC;stroke-width:0.5;">
             <animate attributeName="opacity" from="0" to="1" dur="2s" fill="freeze" begin="0.1s"/>
-            <tspan x="0" y="0">Sol</tspan><tspan x="404.49" y="0">e</tspan><tspan x="561.91" y="0">a</tspan>
+            <tspan id="hl-sol" x="0" y="0">Sol</tspan><tspan id="hl-e" x="404.49" y="0">e</tspan><tspan id="hl-a" x="561.91" y="0">a</tspan>
           </text>
 
           <!-- Horizontal line — draws in from left on load, stays drawn -->
-          <line x1="331.5" y1="520.35" x2="689.5" y2="520.35"
+          <line id="hl-hline" x1="331.5" y1="520.35" x2="689.5" y2="520.35"
                 stroke="#F5F2EC" stroke-width="10" fill="none"
                 opacity="0" stroke-dasharray="358" stroke-dashoffset="358">
             <animate attributeName="stroke-dashoffset" from="358" to="0" dur="1s" fill="freeze" begin="0.8s" calcMode="spline" keySplines="0.4 0 0.2 1"/>
@@ -459,21 +459,21 @@
 
           <!-- Cross symbol — lines draw in sequentially -->
           <!-- Vertical shaft -->
-          <line x1="393.79" y1="454.56" x2="393.79" y2="590.11"
+          <line id="hl-vshaft" x1="393.79" y1="454.56" x2="393.79" y2="590.11"
                 stroke="#F5F2EC" stroke-width="10" fill="none"
                 opacity="0" stroke-dasharray="136" stroke-dashoffset="136">
             <animate attributeName="stroke-dashoffset" from="136" to="0" dur="0.7s" fill="freeze" begin="1s" calcMode="spline" keySplines="0.4 0 0.2 1"/>
             <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
           </line>
           <!-- Horizontal cross bar -->
-          <line x1="367.19" y1="488.44" x2="420.4" y2="488.44"
+          <line id="hl-hbar" x1="367.19" y1="488.44" x2="420.4" y2="488.44"
                 stroke="#F5F2EC" stroke-width="10" fill="none"
                 opacity="0" stroke-dasharray="54" stroke-dashoffset="54">
             <animate attributeName="stroke-dashoffset" from="54" to="0" dur="0.5s" fill="freeze" begin="1.35s" calcMode="spline" keySplines="0.4 0 0.2 1"/>
             <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.35s"/>
           </line>
           <!-- Diagonal foot -->
-          <line x1="370.75" y1="542.92" x2="416.83" y2="569.52"
+          <line id="hl-diag" x1="370.75" y1="542.92" x2="416.83" y2="569.52"
                 stroke="#F5F2EC" stroke-width="10" fill="none"
                 opacity="0" stroke-dasharray="54" stroke-dashoffset="54">
             <animate attributeName="stroke-dashoffset" from="54" to="0" dur="0.5s" fill="freeze" begin="1.55s" calcMode="spline" keySplines="0.4 0 0.2 1"/>
@@ -1763,11 +1763,67 @@
 
   document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-  // ── Hero logo: reveal only after fonts are loaded so cross aligns correctly ──
-  // document.fonts.ready resolves once all @font-face fonts have finished loading.
+  // ── Hero logo: reposition cross/line after fonts load ──────────────
+  // SVG text coordinates are font-metric-dependent. getBBox() returns the
+  // actual rendered bounding box so we recompute all line positions from
+  // real glyph dimensions rather than hardcoded values calibrated to localhost.
   document.fonts.ready.then(() => {
-    const logo = document.getElementById('hero-logo-anim');
-    if (logo) logo.style.visibility = 'visible';
+    const logo   = document.getElementById('hero-logo-anim');
+    const solEl  = document.getElementById('hl-sol');
+    const eEl    = document.getElementById('hl-e');
+    const aEl    = document.getElementById('hl-a');
+    const hline  = document.getElementById('hl-hline');
+    const vshaft = document.getElementById('hl-vshaft');
+    const hbar   = document.getElementById('hl-hbar');
+    const diag   = document.getElementById('hl-diag');
+
+    if (logo)  logo.style.visibility = 'visible';
+    if (!solEl || !eEl || !hline) return;
+
+    try {
+      // getBBox returns coords in the SVG's local coordinate space
+      const solBox = solEl.getBBox();  // "Sol" glyph bounds
+      const eBox   = eEl.getBBox();    // "e" glyph bounds
+
+      // Cross center: midpoint of the gap between "l" and "e"
+      // The gap runs from the right edge of "Sol" to the left edge of "e"
+      const gapStart = solBox.x + solBox.width;  // right edge of "Sol"
+      const gapEnd   = eBox.x;                   // left edge of "e"
+      const cx       = (gapStart + gapEnd) / 2;  // center of gap
+
+      // Y positions derived from original SVG proportions
+      const lineY    = 520.35;   // horizontal line Y (unchanged — not font-dependent)
+      const vTop     = 454.56;
+      const vBot     = 590.11;
+      const hBarY    = 488.44;
+      const hBarHalf = 26.6;     // half-width of crossbar (original: 420.4-393.79)
+      const diagOffX = 23.04;    // original diagonal x-offsets from center
+      const diagOffY = 26.6;
+
+      // Reposition horizontal line: from right edge of "Sol" gap to left of "ea"
+      const lineLen = gapEnd - gapStart + (eBox.width * 0.6);
+      hline.setAttribute('x1', String(gapStart));
+      hline.setAttribute('x2', String(gapStart + lineLen));
+      // Update dasharray to match new length
+      const hlineLen = Math.round(lineLen);
+      hline.setAttribute('stroke-dasharray', hlineLen);
+      hline.querySelector('animate[attributeName="stroke-dashoffset"]')
+           ?.setAttribute('from', hlineLen);
+
+      // Reposition cross vertical shaft
+      vshaft.setAttribute('x1', cx); vshaft.setAttribute('x2', cx);
+
+      // Reposition horizontal crossbar
+      hbar.setAttribute('x1', cx - hBarHalf);
+      hbar.setAttribute('x2', cx + hBarHalf);
+
+      // Reposition diagonal foot
+      diag.setAttribute('x1', cx - diagOffX);
+      diag.setAttribute('x2', cx + diagOffX);
+
+    } catch(err) {
+      // getBBox unavailable (hidden element, etc.) — fall back to hardcoded values
+    }
   });
 
   // ── Contact particles ─────────────────────────────────────────
