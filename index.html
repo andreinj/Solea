@@ -1763,67 +1763,10 @@
 
   document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-  // ── Hero logo: reposition cross/line after fonts load ──────────────
-  // SVG text coordinates are font-metric-dependent. getBBox() returns the
-  // actual rendered bounding box so we recompute all line positions from
-  // real glyph dimensions rather than hardcoded values calibrated to localhost.
+  // ── Hero logo: reveal after fonts are loaded so cross aligns correctly ──
   document.fonts.ready.then(() => {
-    const logo   = document.getElementById('hero-logo-anim');
-    const solEl  = document.getElementById('hl-sol');
-    const eEl    = document.getElementById('hl-e');
-    const aEl    = document.getElementById('hl-a');
-    const hline  = document.getElementById('hl-hline');
-    const vshaft = document.getElementById('hl-vshaft');
-    const hbar   = document.getElementById('hl-hbar');
-    const diag   = document.getElementById('hl-diag');
-
-    if (logo)  logo.style.visibility = 'visible';
-    if (!solEl || !eEl || !hline) return;
-
-    try {
-      // getBBox returns coords in the SVG's local coordinate space
-      const solBox = solEl.getBBox();  // "Sol" glyph bounds
-      const eBox   = eEl.getBBox();    // "e" glyph bounds
-
-      // Cross center: midpoint of the gap between "l" and "e"
-      // The gap runs from the right edge of "Sol" to the left edge of "e"
-      const gapStart = solBox.x + solBox.width;  // right edge of "Sol"
-      const gapEnd   = eBox.x;                   // left edge of "e"
-      const cx       = (gapStart + gapEnd) / 2;  // center of gap
-
-      // Y positions derived from original SVG proportions
-      const lineY    = 520.35;   // horizontal line Y (unchanged — not font-dependent)
-      const vTop     = 454.56;
-      const vBot     = 590.11;
-      const hBarY    = 488.44;
-      const hBarHalf = 26.6;     // half-width of crossbar (original: 420.4-393.79)
-      const diagOffX = 23.04;    // original diagonal x-offsets from center
-      const diagOffY = 26.6;
-
-      // Reposition horizontal line: from right edge of "Sol" gap to left of "ea"
-      const lineLen = gapEnd - gapStart + (eBox.width * 0.6);
-      hline.setAttribute('x1', String(gapStart));
-      hline.setAttribute('x2', String(gapStart + lineLen));
-      // Update dasharray to match new length
-      const hlineLen = Math.round(lineLen);
-      hline.setAttribute('stroke-dasharray', hlineLen);
-      hline.querySelector('animate[attributeName="stroke-dashoffset"]')
-           ?.setAttribute('from', hlineLen);
-
-      // Reposition cross vertical shaft
-      vshaft.setAttribute('x1', cx); vshaft.setAttribute('x2', cx);
-
-      // Reposition horizontal crossbar
-      hbar.setAttribute('x1', cx - hBarHalf);
-      hbar.setAttribute('x2', cx + hBarHalf);
-
-      // Reposition diagonal foot
-      diag.setAttribute('x1', cx - diagOffX);
-      diag.setAttribute('x2', cx + diagOffX);
-
-    } catch(err) {
-      // getBBox unavailable (hidden element, etc.) — fall back to hardcoded values
-    }
+    const logo = document.getElementById('hero-logo-anim');
+    if (logo) logo.style.visibility = 'visible';
   });
 
   // ── Contact particles ─────────────────────────────────────────
