@@ -39,7 +39,7 @@
   <style>
     /* ── Base ──────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: hidden; scrollbar-gutter: stable; }
+    html { scroll-behavior: smooth; scrollbar-gutter: stable; }
     body {
       font-family: 'Satoshi', system-ui, sans-serif;
       background: #F5F2EC;
@@ -357,10 +357,6 @@
       /* FAQ sticky heading — remove sticky when stacked */
       .faq-left-sticky { position: static !important; }
 
-      /* Zoom parallax — reduce height on mobile */
-      #zp-wrap { height: 80vh !important; }
-      #zp-sticky { height: 80vh !important; }
-
       /* Footer bottom bar — stack on mobile */
       .footer-bottom-bar { flex-direction: column !important; align-items: center !important; text-align: center !important; }
     }
@@ -389,8 +385,22 @@
     <div class="flex items-center justify-between" style="height:72px;">
 
       <a href="#hero" aria-label="Solea AV">
-        <img src="brand_assets/Solea AV Ideas-03.png" alt="Solea AV"
-             class="logo-on-dark" style="height:170px; width:auto;" />
+        <svg viewBox="50 350 900 370" style="height:52px;width:auto;display:block;" xmlns="http://www.w3.org/2000/svg" aria-label="Solea AV">
+          <defs>
+            <style>
+              .nav-logo-2, .nav-logo-3 { fill:#F5F2EC; stroke:#F5F2EC; }
+              .nav-logo-2 { stroke-miterlimit:10; stroke-width:10px; }
+              .nav-logo-3 { font-family:'Satoshi Variable','Satoshi',Georgia,serif; font-size:308.07px; font-weight:300; font-variation-settings:'wght' 300; }
+            </style>
+          </defs>
+          <text class="nav-logo-3" transform="translate(136.74 597.27) scale(1.01 .97)"><tspan x="0" y="0">Sol</tspan><tspan x="404.49" y="0">e</tspan><tspan x="561.91" y="0">a</tspan></text>
+          <line class="nav-logo-2" x1="689.5" y1="520.35" x2="331.5" y2="520.35"/>
+          <g>
+            <line class="nav-logo-2" x1="370.75" y1="542.92" x2="416.83" y2="569.52"/>
+            <line class="nav-logo-2" x1="367.19" y1="488.44" x2="420.4" y2="488.44"/>
+            <line class="nav-logo-2" x1="393.79" y1="454.56" x2="393.79" y2="590.11"/>
+          </g>
+        </svg>
       </a>
 
       <nav class="hidden md:flex items-center gap-9" aria-label="Main navigation">
@@ -408,6 +418,10 @@
           (617) 644-7491
         </a>
         <a href="#contact" class="hidden md:inline-block shiny-nav-btn">Schedule a Consultation</a>
+        <a href="tel:+16176447491" class="md:hidden flex items-center gap-1" aria-label="Call Solea AV" style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.7);text-decoration:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02z"/></svg>
+          <span class="hidden xs:inline">(617) 644-7491</span>
+        </a>
         <button id="menu-btn" class="md:hidden p-1 flex flex-col gap-1.5" aria-label="Menu" aria-expanded="false">
           <span id="b1" class="block w-6 h-px bg-cream-400 transition-transform duration-300 origin-center" style="background:#F5F2EC;"></span>
           <span id="b2" class="block w-6 h-px transition-opacity duration-300" style="background:#F5F2EC;"></span>
