@@ -101,19 +101,54 @@
 
     /* ── Staggered menu ───────────────────────────────────────── */
     .sm-toggle {
-      display: inline-flex; align-items: center; gap: 0.65rem;
-      background: none; border: none; cursor: pointer;
-      color: inherit; padding: 0.25rem; outline-offset: 4px;
+      position: relative; overflow: hidden;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent; border: 1px solid rgba(245,242,236,0.25);
+      cursor: pointer; color: inherit;
+      padding: 0.5rem 0.9rem; outline-offset: 4px;
+      border-radius: 9999px;
     }
+    .sm-toggle-fill {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center; gap: 0.65rem;
+      background: #C96A45;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease, border-radius 0.3s ease;
+      pointer-events: none;
+      border-radius: 9999px;
+      z-index: 2;
+    }
+    .sm-toggle:hover .sm-toggle-fill {
+      transform: translateY(0);
+      opacity: 1;
+      border-radius: 0;
+    }
+    .sm-toggle:hover { border-color: #C96A45; }
     .sm-toggle:focus-visible { outline: 2px solid #C96A45; border-radius: 2px; }
     .sm-toggle-textWrap {
+      position: relative; z-index: 1;
       display: inline-block; height: 1.1em; overflow: hidden; line-height: 1.1em;
       font-family: 'Satoshi', sans-serif; font-size: 0.7rem; font-weight: 500;
       letter-spacing: 0.14em; text-transform: uppercase;
+      transform: translateY(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .sm-toggle:hover .sm-toggle-textWrap {
+      transform: translateY(-0.75rem);
+      opacity: 0;
     }
     .sm-toggle-textInner { display: flex; flex-direction: column; }
     .sm-toggle-line { display: block; height: 1.1em; line-height: 1.1em; white-space: nowrap; }
-    .sm-icon { display: block; width: 22px; height: 22px; position: relative; }
+    .sm-icon {
+      display: block; width: 22px; height: 22px; position: relative; z-index: 1;
+      transform: translateY(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .sm-toggle:hover .sm-icon {
+      transform: translateY(-0.75rem);
+      opacity: 0;
+    }
     .sm-icon-line {
       position: absolute; top: 50%; left: 50%;
       width: 14px; height: 1.5px; background: currentColor;
@@ -524,6 +559,13 @@
 
         <!-- Staggered menu toggle -->
         <button id="sm-toggle" class="sm-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="sm-panel" type="button" style="color:#F5F2EC;">
+          <span class="sm-toggle-fill" aria-hidden="true">
+            <span style="font-family:'Satoshi',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#F5F2EC;" id="sm-fillText">Menu</span>
+            <span style="display:block;width:22px;height:22px;position:relative;">
+              <span id="sm-fillH" style="position:absolute;top:50%;left:50%;width:14px;height:1.5px;background:#F5F2EC;transform:translate(-50%,-50%)"></span>
+              <span id="sm-fillV" style="position:absolute;top:50%;left:50%;width:14px;height:1.5px;background:#F5F2EC;transform:translate(-50%,-50%) rotate(90deg)"></span>
+            </span>
+          </span>
           <span class="sm-toggle-textWrap" aria-hidden="true">
             <span id="sm-textInner" class="sm-toggle-textInner">
               <span class="sm-toggle-line">Menu</span>
@@ -1956,6 +1998,9 @@
     const toggleBtn  = document.getElementById('sm-toggle');
     const icon       = document.getElementById('sm-icon');
     const textInner  = document.getElementById('sm-textInner');
+    const fillText   = document.getElementById('sm-fillText');
+    const fillH      = document.getElementById('sm-fillH');
+    const fillV      = document.getElementById('sm-fillV');
     const itemLabels = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
     const contact    = panel.querySelector('.sm-panel-contact');
     const hideables  = Array.from(document.querySelectorAll('.sm-nav-hideable'));
@@ -2001,6 +2046,9 @@
       gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
       gsap.set(textInner, { yPercent: 0 });
       gsap.to(textInner, { yPercent: -50, duration: 0.5, ease: 'power4.out' });
+      if (fillText) fillText.textContent = 'Close';
+      if (fillH) fillH.style.transform = 'translate(-50%,-50%) rotate(225deg)';
+      if (fillV) fillV.style.transform = 'translate(-50%,-50%) rotate(315deg)';
     }
 
     function closeMenu() {
@@ -2020,6 +2068,9 @@
       });
       gsap.to(icon, { rotate: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
       gsap.to(textInner, { yPercent: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+      if (fillText) fillText.textContent = 'Menu';
+      if (fillH) fillH.style.transform = 'translate(-50%,-50%)';
+      if (fillV) fillV.style.transform = 'translate(-50%,-50%) rotate(90deg)';
     }
 
     toggleBtn.addEventListener('click', () => { smOpen ? closeMenu() : openMenu(); });
