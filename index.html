@@ -121,13 +121,14 @@
 
     /* Overlay layers */
     .sm-prelayers { position: fixed; inset: 0; z-index: 998; pointer-events: none; }
-    .sm-prelayer { position: absolute; inset: 0; will-change: transform; }
+    .sm-prelayer { position: absolute; inset: 0; will-change: transform; transform: translateX(100%); }
 
     /* Full-screen split panel */
     .sm-panel {
       position: fixed; inset: 0; z-index: 999;
       display: grid; grid-template-columns: 1fr 1fr;
       will-change: transform;
+      transform: translateX(100%);
     }
     /* Left side — FloatingLines bg */
     .sm-panel-left {
