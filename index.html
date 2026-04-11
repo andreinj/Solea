@@ -1938,6 +1938,33 @@
 
   // ── Staggered menu ────────────────────────────────────────────
   (function () {
+    if (typeof gsap === 'undefined') {
+      // Fallback: simple toggle without animation
+      var tb = document.getElementById('sm-toggle');
+      var pn = document.getElementById('sm-panel');
+      if (tb && pn) {
+        var open = false;
+        tb.addEventListener('click', function() {
+          open = !open;
+          pn.style.transform = open ? 'translateX(0)' : 'translateX(100%)';
+          pn.style.transition = 'transform 0.3s ease';
+          document.querySelectorAll('#sm-prelayers .sm-prelayer').forEach(function(el) {
+            el.style.transform = open ? 'translateX(0)' : 'translateX(100%)';
+            el.style.transition = 'transform 0.3s ease';
+          });
+        });
+        pn.querySelectorAll('a').forEach(function(a) {
+          a.addEventListener('click', function() {
+            pn.style.transform = 'translateX(100%)';
+            document.querySelectorAll('#sm-prelayers .sm-prelayer').forEach(function(el) {
+              el.style.transform = 'translateX(100%)';
+            });
+            open = false;
+          });
+        });
+      }
+      return;
+    }
     const panel      = document.getElementById('sm-panel');
     const preLayers  = Array.from(document.querySelectorAll('#sm-prelayers .sm-prelayer'));
     const toggleBtn  = document.getElementById('sm-toggle');
@@ -2172,20 +2199,7 @@
     requestAnimationFrame(tick);
   })();
 
-  // ── Scroll reveal ─────────────────────────────────────────────
-  const revealObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-
-  // ── Hero logo: reveal after fonts are loaded so cross aligns correctly ──
-  document.fonts.ready.then(() => {
-    const logo = document.getElementById('hero-logo-anim');
-    if (logo) logo.style.visibility = 'visible';
-  });
+  // (Scroll reveal + hero logo moved to separate script block for resilience)
 
   // ── Contact particles ─────────────────────────────────────────
   (function () {
@@ -2421,6 +2435,26 @@
     }
   }
 </script>
+
+<!-- Independent script — no GSAP/Three.js dependency -->
+<script>
+  // ── Scroll reveal ─────────────────────────────────────────────
+  (function() {
+    var revealObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el) { revealObs.observe(el); });
+  })();
+
+  // ── Hero logo: reveal after fonts loaded ──────────────────────
+  document.fonts.ready.then(function() {
+    var logo = document.getElementById('hero-logo-anim');
+    if (logo) logo.style.visibility = 'visible';
+  });
+</script>
+
 <script type="module">
   (async () => {
     const { createNoise2D } = await import('https://esm.sh/simplex-noise@4.0.1');
