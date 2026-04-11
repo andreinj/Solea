@@ -27,6 +27,8 @@
        preventing the cross from misaligning when a fallback font is briefly used -->
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -83,7 +85,7 @@
     .label-light { color: rgba(245,242,236,0.55); }
     .label-terra  { color: #C96A45; }
 
-    /* ── Nav ───────────────────────────────────────────────────── */
+    /* ── Nav bar ────────────────────────────────────────────────── */
     #nav { transition: background 0.4s ease, box-shadow 0.4s ease; }
     #nav.scrolled {
       background: rgba(32,49,66,0.35) !important;
@@ -94,23 +96,109 @@
     #nav.scrolled:hover {
       background: rgba(32,49,66,0.97) !important;
     }
-    .nav-link {
-      font-family: 'Satoshi', sans-serif;
-      font-size: 0.7rem; font-weight: 500;
+
+    /* ── Staggered menu ───────────────────────────────────────── */
+    .sm-toggle {
+      display: inline-flex; align-items: center; gap: 0.65rem;
+      background: none; border: none; cursor: pointer;
+      color: inherit; padding: 0.25rem; outline-offset: 4px;
+    }
+    .sm-toggle:focus-visible { outline: 2px solid #C96A45; border-radius: 2px; }
+    .sm-toggle-textWrap {
+      display: inline-block; height: 1.1em; overflow: hidden; line-height: 1.1em;
+      font-family: 'Satoshi', sans-serif; font-size: 0.7rem; font-weight: 500;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: rgba(245,242,236,0.6);
-      text-decoration: none;
-      transition: color 0.25s ease;
-      position: relative; padding-bottom: 2px;
     }
-    .nav-link::after {
-      content: ''; position: absolute; bottom: 0; left: 0;
-      width: 0; height: 1px; background: #C96A45;
-      transition: width 0.3s ease;
+    .sm-toggle-textInner { display: flex; flex-direction: column; }
+    .sm-toggle-line { display: block; height: 1.1em; line-height: 1.1em; white-space: nowrap; }
+    .sm-icon { display: block; width: 22px; height: 22px; position: relative; }
+    .sm-icon-line {
+      position: absolute; top: 50%; left: 50%;
+      width: 14px; height: 1.5px; background: currentColor;
+      transform: translate(-50%, -50%);
     }
-    .nav-link:hover { color: #F5F2EC; }
-    .nav-link:hover::after { width: 100%; }
-    .nav-link:focus-visible { outline: 2px solid #C96A45; outline-offset: 4px; border-radius: 2px; }
+    .sm-icon-line-v { transform: translate(-50%, -50%) rotate(90deg); }
+
+    /* Overlay layers */
+    .sm-prelayers { position: fixed; inset: 0; z-index: 998; pointer-events: none; }
+    .sm-prelayer { position: absolute; inset: 0; will-change: transform; }
+
+    /* Full-screen split panel */
+    .sm-panel {
+      position: fixed; inset: 0; z-index: 999;
+      display: grid; grid-template-columns: 1fr 1fr;
+      will-change: transform;
+    }
+    /* Left side — FloatingLines bg */
+    .sm-panel-left {
+      position: relative; overflow: hidden;
+      background: #0a0a0e;
+    }
+    .sm-panel-left canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
+    /* Right side — nav items */
+    .sm-panel-right {
+      background: #203142;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem 3rem 2rem;
+      overflow-y: auto;
+    }
+    .sm-panel-list { list-style: none; padding: 0; margin: 0; }
+    .sm-panel-itemWrap {
+      overflow: hidden;
+      border-bottom: 1px solid rgba(245,242,236,0.08);
+    }
+    .sm-panel-item {
+      display: block; text-decoration: none; padding: 0.7rem 0;
+    }
+    .sm-panel-item:focus-visible { outline: 2px solid #C96A45; outline-offset: 2px; }
+    .sm-panel-itemLabel {
+      font-family: 'Bespoke Serif', Georgia, serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 300; color: #F5F2EC;
+      letter-spacing: -0.02em; line-height: 1.2;
+      display: inline-block; will-change: transform;
+      position: relative; overflow: hidden;
+      padding: 0.15em 0.4em 0.15em 0.2em;
+      transition: color 0.25s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .sm-panel-itemLabel::after {
+      content: '';
+      position: absolute; inset: 0; border-radius: inherit;
+      background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.18) 50%, transparent 75%, transparent 100%);
+      background-size: 250% 250%;
+      background-position: 200% 0;
+      background-repeat: no-repeat;
+      transition: background-position 0s ease;
+      pointer-events: none;
+    }
+    .sm-panel-item:hover .sm-panel-itemLabel {
+      color: #C96A45; transform: translateX(8px);
+    }
+    .sm-panel-item:hover .sm-panel-itemLabel::after {
+      background-position: -100% 0;
+      transition: background-position 0.8s ease;
+    }
+    /* Contact block at bottom of right side */
+    .sm-panel-contact {
+      margin-top: auto; padding-top: 1.25rem;
+      border-top: 1px solid rgba(245,242,236,0.08);
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .sm-panel-contact a {
+      font-family: 'Satoshi', sans-serif; font-size: 0.82rem;
+      color: rgba(245,242,236,0.5); text-decoration: none;
+      transition: color 0.2s ease; display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .sm-panel-contact a:hover { color: #F5F2EC; }
+    /* Header items that hide when menu opens */
+    .sm-nav-hideable { transition: opacity 0.25s ease; }
+    .sm-nav-hideable.sm-hidden { opacity: 0; pointer-events: none; }
+
+    @media (max-width: 768px) {
+      .sm-panel { grid-template-columns: 1fr; }
+      .sm-panel-left { display: none; }
+      .sm-panel-right { padding: 5rem 2rem 2rem; }
+    }
 
     /* ── Buttons ───────────────────────────────────────────────── */
     .btn-primary {
@@ -178,13 +266,7 @@
     }
     .problem-item:last-child { border-bottom: none; }
 
-    /* ── Mobile menu ───────────────────────────────────────────── */
-    .mobile-menu {
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
-      background: rgba(32,49,66,0.98); backdrop-filter: blur(20px);
-    }
-    .mobile-menu.open { max-height: 480px; }
+    /* (mobile-menu replaced by staggered menu) */
 
     /* ── Form inputs ───────────────────────────────────────────── */
     .form-input {
@@ -359,8 +441,8 @@
       /* Hide decorative hero logo SVG on mobile — prevents horizontal overflow */
       #hero-logo-wrap { display: none !important; }
 
-      /* How It Works step content — stack to single column */
-      .how-step-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; padding-top: 2.5rem !important; padding-bottom: 3.5rem !important; }
+      /* How It Works — unstick header on mobile */
+      .hiw-header-sticky { position: static !important; margin-bottom: 2.5rem; }
 
       /* Founder tag — prevent right overflow */
       #founder-tag { right: 0 !important; bottom: -1rem !important; max-width: 180px !important; padding: 1.1rem 1.25rem !important; }
@@ -378,7 +460,6 @@
       .btn-row a, .btn-row button { text-align: center !important; }
 
       /* Even tighter on very small screens */
-      .how-step-grid { padding-top: 2rem !important; padding-bottom: 2.5rem !important; }
       #founder-tag { right: 0 !important; max-width: 160px !important; font-size: 0.88rem !important; }
 
       /* Contact form name/email row — stack on very small screens */
@@ -391,10 +472,45 @@
 <!-- ═══════════════════════════════════════════════════════════
      NAVIGATION
 ════════════════════════════════════════════════════════════ -->
-<header id="nav" class="fixed top-0 left-0 right-0 z-50" style="background: transparent;">
+<!-- Staggered menu overlay layers (behind panel) -->
+<div id="sm-prelayers" class="sm-prelayers" aria-hidden="true">
+  <div class="sm-prelayer" style="background:#203142;"></div>
+  <div class="sm-prelayer" style="background:#C96A45;"></div>
+</div>
+
+<!-- Staggered menu panel — full-screen split -->
+<aside id="sm-panel" class="sm-panel" aria-hidden="true">
+  <!-- Left: FloatingLines shader bg -->
+  <div class="sm-panel-left" id="sm-floatinglines"></div>
+  <!-- Right: nav links -->
+  <div class="sm-panel-right">
+    <nav>
+      <ul class="sm-panel-list" role="list">
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#services"><span class="sm-panel-itemLabel">Services</span></a></li>
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#who"><span class="sm-panel-itemLabel">Who We Serve</span></a></li>
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#how"><span class="sm-panel-itemLabel">How It Works</span></a></li>
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#about"><span class="sm-panel-itemLabel">About</span></a></li>
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#faq"><span class="sm-panel-itemLabel">FAQ</span></a></li>
+        <!-- TODO: swap 404.html → projects.html when project content is ready -->
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="404.html"><span class="sm-panel-itemLabel">Projects</span></a></li>
+        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#contact"><span class="sm-panel-itemLabel">Contact</span></a></li>
+      </ul>
+      <div class="sm-panel-contact">
+        <a href="tel:+16176447491">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;opacity:0.7;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02z"/></svg>
+          (617) 644-7491
+        </a>
+        <a href="#contact" class="shiny-nav-btn" style="text-align:center;margin-top:0.5rem;">Schedule a Consultation</a>
+      </div>
+    </nav>
+  </div>
+</aside>
+
+<header id="nav" class="fixed top-0 left-0 right-0" style="background: transparent; z-index: 1000;">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="flex items-center justify-between" style="height:72px;">
 
+      <!-- Logo -->
       <a href="#hero" aria-label="Solea AV">
         <svg viewBox="50 350 900 370" style="height:52px;width:auto;display:block;" xmlns="http://www.w3.org/2000/svg" aria-label="Solea AV">
           <defs>
@@ -414,49 +530,29 @@
         </svg>
       </a>
 
-      <nav class="hidden md:flex items-center gap-9" aria-label="Main navigation">
-        <a href="#services"  class="nav-link">Services</a>
-        <a href="#who"       class="nav-link">Who We Serve</a>
-        <a href="#how"       class="nav-link">How It Works</a>
-        <a href="#faq"       class="nav-link">FAQ</a>
-        <a href="#about"     class="nav-link">About</a>
-        <a href="#contact"   class="nav-link">Contact</a>
-      </nav>
-
-      <div class="flex items-center gap-4">
-        <a href="tel:+16176447491" class="hidden lg:inline-flex items-center gap-1.5" style="font-family:'Satoshi',sans-serif;font-size:0.8rem;color:rgba(245,242,236,0.6);text-decoration:none;transition:color 0.2s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.6)'">
+      <!-- Right side: phone + CTA + menu toggle -->
+      <div class="flex items-center gap-4" style="color:#F5F2EC;">
+        <a href="tel:+16176447491" class="sm-nav-hideable hidden lg:inline-flex items-center gap-1.5" style="font-family:'Satoshi',sans-serif;font-size:0.8rem;color:rgba(245,242,236,0.6);text-decoration:none;transition:color 0.2s ease;" onmouseover="this.style.color='#F5F2EC'" onmouseout="this.style.color='rgba(245,242,236,0.6)'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02z"/></svg>
           (617) 644-7491
         </a>
-        <a href="#contact" class="hidden md:inline-block shiny-nav-btn">Schedule a Consultation</a>
-        <a href="tel:+16176447491" class="md:hidden flex items-center gap-1" aria-label="Call Solea AV" style="font-family:'Satoshi',sans-serif;font-size:0.72rem;color:rgba(245,242,236,0.7);text-decoration:none;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02z"/></svg>
-          <span class="hidden xs:inline">(617) 644-7491</span>
-        </a>
-        <button id="menu-btn" class="md:hidden p-1 flex flex-col gap-1.5" aria-label="Menu" aria-expanded="false">
-          <span id="b1" class="block w-6 h-px bg-cream-400 transition-transform duration-300 origin-center" style="background:#F5F2EC;"></span>
-          <span id="b2" class="block w-6 h-px transition-opacity duration-300" style="background:#F5F2EC;"></span>
-          <span id="b3" class="block w-6 h-px bg-cream-400 transition-transform duration-300 origin-center" style="background:#F5F2EC;"></span>
+        <a href="#contact" class="sm-nav-hideable hidden md:inline-block shiny-nav-btn">Schedule a Consultation</a>
+
+        <!-- Staggered menu toggle -->
+        <button id="sm-toggle" class="sm-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="sm-panel" type="button" style="color:#F5F2EC;">
+          <span class="sm-toggle-textWrap" aria-hidden="true">
+            <span id="sm-textInner" class="sm-toggle-textInner">
+              <span class="sm-toggle-line">Menu</span>
+              <span class="sm-toggle-line">Close</span>
+            </span>
+          </span>
+          <span id="sm-icon" class="sm-icon" aria-hidden="true">
+            <span id="sm-plusH" class="sm-icon-line"></span>
+            <span id="sm-plusV" class="sm-icon-line sm-icon-line-v"></span>
+          </span>
         </button>
       </div>
     </div>
-  </div>
-
-  <div id="mobile-menu" class="mobile-menu md:hidden">
-    <nav class="flex flex-col px-6 py-6 gap-5" aria-label="Mobile nav">
-      <a href="#services" class="nav-link" style="font-size:0.82rem;">Services</a>
-      <a href="#who"      class="nav-link" style="font-size:0.82rem;">Who We Serve</a>
-      <a href="#how"      class="nav-link" style="font-size:0.82rem;">How It Works</a>
-      <a href="#faq"      class="nav-link" style="font-size:0.82rem;">FAQ</a>
-      <a href="#about"    class="nav-link" style="font-size:0.82rem;">About</a>
-      <a href="#contact"  class="nav-link" style="font-size:0.82rem;">Contact</a>
-      <hr class="rule rule-cream" />
-      <a href="tel:+16176447491" class="flex items-center gap-2" style="font-family:'Satoshi',sans-serif;font-size:0.82rem;color:rgba(245,242,236,0.6);text-decoration:none;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02z"/></svg>
-        (617) 644-7491
-      </a>
-      <a href="#contact" class="btn-primary" style="text-align:center;">Schedule a Consultation</a>
-    </nav>
   </div>
 </header>
 
@@ -1171,109 +1267,132 @@
 
 
 <!-- ═══════════════════════════════════════════════════════════
-     HOW IT WORKS  — sticky section tabs
+     HOW IT WORKS  — vertical timeline
 ════════════════════════════════════════════════════════════ -->
+<section id="how" style="background:#F5F2EC; padding:6rem 0;">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
-<!-- Intro header (outside sticky tabs) -->
-<div id="how" style="background:#F5F2EC; padding:6rem 0 4rem;">
-  <div class="max-w-7xl mx-auto px-6 lg:px-10" style="text-align:center;">
-    <span class="label reveal">How It Works</span>
-    <h2 class="font-display reveal reveal-d1"
-        style="font-size:clamp(2rem,3.5vw,3rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:#203142; margin-top:0.85rem;">
-      A straightforward process built around<br/>
-      <em style="font-style:italic; color:rgba(32,49,66,0.38);">your parish's needs and schedule.</em>
-    </h2>
+    <!-- Two-column: header left, timeline right -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;" class="two-col">
+
+      <!-- Left: sticky header -->
+      <div style="position:sticky;top:6rem;" class="hiw-header-sticky">
+        <span class="label reveal">How It Works</span>
+        <h2 class="font-display reveal reveal-d1"
+            style="font-size:clamp(2.2rem,3.5vw,3.2rem); font-weight:300; line-height:1.1; letter-spacing:-0.02em; color:rgba(32,49,66,0.38); margin-top:0.85rem;">
+          A straightforward process built around
+          <em style="font-style:italic; color:#203142;">your parish's needs.</em>
+        </h2>
+      </div>
+
+      <!-- Right: timeline -->
+      <div id="hiw-timeline" style="position:relative;">
+        <!-- Single continuous line — sized by JS to run from box 1 center to box 5 center -->
+        <div id="hiw-line" style="position:absolute;left:23px;width:1px;background:rgba(32,49,66,0.12);top:24px;height:0;"></div>
+
+        <!-- Step 1 -->
+        <div class="hiw-step reveal" style="display:grid;grid-template-columns:48px 1fr;gap:1.75rem;margin-bottom:2.75rem;">
+          <div style="padding-top:0;">
+            <div class="hiw-box" style="width:48px;height:48px;border:1px solid rgba(201,106,69,0.35);display:flex;align-items:center;justify-content:center;background:#F5F2EC;position:relative;z-index:2;">
+              <span class="font-display" style="font-size:1rem;font-weight:400;color:#C96A45;">1</span>
+            </div>
+          </div>
+          <div style="padding-top:0.5rem;">
+            <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:300;color:#C96A45;letter-spacing:-0.02em;margin:0;">Consultation</h3>
+            <p class="font-body" style="font-size:1rem;line-height:1.8;color:rgba(32,49,66,0.55);margin-top:0.65rem;">
+              A complimentary conversation about your space, your challenges, and what you are hoping to achieve. We give you an honest assessment of what is possible and what it might cost — no commitment required.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="hiw-step reveal reveal-d1" style="display:grid;grid-template-columns:48px 1fr;gap:1.75rem;margin-bottom:2.75rem;">
+          <div style="padding-top:0;">
+            <div class="hiw-box" style="width:48px;height:48px;border:1px solid rgba(201,106,69,0.35);display:flex;align-items:center;justify-content:center;background:#F5F2EC;position:relative;z-index:2;">
+              <span class="font-display" style="font-size:1rem;font-weight:400;color:#C96A45;">2</span>
+            </div>
+          </div>
+          <div style="padding-top:0.5rem;">
+            <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:300;color:#C96A45;letter-spacing:-0.02em;margin:0;">Site Survey</h3>
+            <p class="font-body" style="font-size:1rem;line-height:1.8;color:rgba(32,49,66,0.55);margin-top:0.65rem;">
+              A comprehensive on-site assessment — acoustic response, existing infrastructure, cable pathways, and liturgical flow. You receive a Written Findings Summary with photo documentation and a technical roadmap. The $250 survey fee is fully credited toward your project.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="hiw-step reveal reveal-d2" style="display:grid;grid-template-columns:48px 1fr;gap:1.75rem;margin-bottom:2.75rem;">
+          <div style="padding-top:0;">
+            <div class="hiw-box" style="width:48px;height:48px;border:1px solid rgba(201,106,69,0.35);display:flex;align-items:center;justify-content:center;background:#F5F2EC;position:relative;z-index:2;">
+              <span class="font-display" style="font-size:1rem;font-weight:400;color:#C96A45;">3</span>
+            </div>
+          </div>
+          <div style="padding-top:0.5rem;">
+            <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:300;color:#C96A45;letter-spacing:-0.02em;margin:0;">Proposal</h3>
+            <p class="font-body" style="font-size:1rem;line-height:1.8;color:rgba(32,49,66,0.55);margin-top:0.65rem;">
+              A detailed written proposal covering system design, equipment, scope, timeline, and itemized pricing. No hidden fees. We present it in person or over a call and answer every question before you decide.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="hiw-step reveal reveal-d3" style="display:grid;grid-template-columns:48px 1fr;gap:1.75rem;margin-bottom:2.75rem;">
+          <div style="padding-top:0;">
+            <div class="hiw-box" style="width:48px;height:48px;border:1px solid rgba(201,106,69,0.35);display:flex;align-items:center;justify-content:center;background:#F5F2EC;position:relative;z-index:2;">
+              <span class="font-display" style="font-size:1rem;font-weight:400;color:#C96A45;">4</span>
+            </div>
+          </div>
+          <div style="padding-top:0.5rem;">
+            <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:300;color:#C96A45;letter-spacing:-0.02em;margin:0;">Installation</h3>
+            <p class="font-body" style="font-size:1rem;line-height:1.8;color:rgba(32,49,66,0.55);margin-top:0.65rem;">
+              Scheduled around your liturgical calendar — weekdays, off-hours, or between services. We arrive on time, work cleanly, and treat your space with the respect it deserves. Most installations take one to three days.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="hiw-step reveal reveal-d4" style="display:grid;grid-template-columns:48px 1fr;gap:1.75rem;">
+          <div style="padding-top:0;">
+            <div class="hiw-box" style="width:48px;height:48px;border:1px solid rgba(201,106,69,0.35);display:flex;align-items:center;justify-content:center;background:#F5F2EC;position:relative;z-index:2;">
+              <span class="font-display" style="font-size:1rem;font-weight:400;color:#C96A45;">5</span>
+            </div>
+          </div>
+          <div style="padding-top:0.5rem;">
+            <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,1.85rem);font-weight:300;color:#C96A45;letter-spacing:-0.02em;margin:0;">Handoff &amp; Support</h3>
+            <p class="font-body" style="font-size:1rem;line-height:1.8;color:rgba(32,49,66,0.55);margin-top:0.65rem;">
+              One switch — no trained operator required. We walk your team through everything, provide full documentation, and remain available for questions and support long after the job is done.
+            </p>
+          </div>
+        </div>
+
+        <script>
+          (function(){
+            var boxes = document.querySelectorAll('.hiw-box');
+            var line = document.getElementById('hiw-line');
+            var timeline = document.getElementById('hiw-timeline');
+            function size(){
+              var tRect = timeline.getBoundingClientRect();
+              var first = boxes[0].getBoundingClientRect();
+              var last = boxes[boxes.length-1].getBoundingClientRect();
+              var top = first.top + first.height/2 - tRect.top;
+              var bot = last.top + last.height/2 - tRect.top;
+              line.style.top = top + 'px';
+              line.style.height = (bot - top) + 'px';
+            }
+            size();
+            window.addEventListener('resize', size);
+            window.addEventListener('load', size);
+          })();
+        </script>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- Sticky tabs outer — overflow:clip so sticky works but content is clipped -->
-<div style="overflow:clip; background:#F5F2EC;">
-
-  <!-- Step 1 -->
-  <section style="position:relative; overflow:clip; background:#F5F2EC;">
-    <div style="position:sticky; top:71px; z-index:10; background:#203142; border-top:1px solid rgba(32,49,66,0.12); border-bottom:1px solid rgba(32,49,66,0.08); box-shadow:0 4px 16px rgba(32,49,66,0.06);">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:1.25rem; padding-bottom:1.25rem; display:flex; align-items:baseline; gap:1.5rem;">
-        <span class="font-display" style="font-size:1rem;font-weight:300;color:rgba(245,242,236,0.6);letter-spacing:0.1em;">01</span>
-        <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#F5F2EC;letter-spacing:-0.02em;margin:0;">Consultation</h3>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 how-step-grid" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
-      <div>
-        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">01</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A complimentary consultation to discuss your sanctuary and goals. No strings attached.</p>
-      </div>
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">It starts with a conversation. Tell us about your space, your challenges, and what you are hoping to achieve. We will ask the right questions and give you an honest assessment of what is possible and what it might cost before any commitment is made.</p>
-    </div>
-  </section>
-
-  <!-- Step 2 -->
-  <section style="position:relative; overflow:clip; background:#F5F2EC;">
-    <div style="position:sticky; top:71px; z-index:10; background:#203142; border-top:1px solid rgba(32,49,66,0.12); border-bottom:1px solid rgba(32,49,66,0.08); box-shadow:0 4px 16px rgba(32,49,66,0.06);">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:1.25rem; padding-bottom:1.25rem; display:flex; align-items:baseline; gap:1.5rem;">
-        <span class="font-display" style="font-size:1rem;font-weight:300;color:rgba(245,242,236,0.6);letter-spacing:0.1em;">02</span>
-        <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#F5F2EC;letter-spacing:-0.02em;margin:0;">Site Survey</h3>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 how-step-grid" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
-      <div>
-        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">02</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A thorough walk-through of your space, acoustics, and existing setup.</p>
-      </div>
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We perform a comprehensive on-site assessment of your sanctuary, evaluating acoustic response, existing infrastructure, cable pathways, and liturgical flow. Following the survey, you will receive a formal Written Findings Summary including photo documentation and a technical roadmap. The $250 site survey fee is fully credited toward your project upon commencement.</p>
-    </div>
-  </section>
-
-  <!-- Step 3 -->
-  <section style="position:relative; overflow:clip; background:#F5F2EC;">
-    <div style="position:sticky; top:71px; z-index:10; background:#203142; border-top:1px solid rgba(32,49,66,0.12); border-bottom:1px solid rgba(32,49,66,0.08); box-shadow:0 4px 16px rgba(32,49,66,0.06);">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:1.25rem; padding-bottom:1.25rem; display:flex; align-items:baseline; gap:1.5rem;">
-        <span class="font-display" style="font-size:1rem;font-weight:300;color:rgba(245,242,236,0.6);letter-spacing:0.1em;">03</span>
-        <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#F5F2EC;letter-spacing:-0.02em;margin:0;">Proposal</h3>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 how-step-grid" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
-      <div>
-        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">03</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">A detailed written proposal — no hidden fees, no surprises.</p>
-      </div>
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We deliver a detailed written proposal covering the recommended system design, equipment list, project scope, timeline, and itemized pricing. No hidden fees, no surprises. We present it in person or over a call and answer every question before you decide.</p>
-    </div>
-  </section>
-
-  <!-- Step 4 -->
-  <section style="position:relative; overflow:clip; background:#F5F2EC;">
-    <div style="position:sticky; top:71px; z-index:10; background:#203142; border-top:1px solid rgba(32,49,66,0.12); border-bottom:1px solid rgba(32,49,66,0.08); box-shadow:0 4px 16px rgba(32,49,66,0.06);">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:1.25rem; padding-bottom:1.25rem; display:flex; align-items:baseline; gap:1.5rem;">
-        <span class="font-display" style="font-size:1rem;font-weight:300;color:rgba(245,242,236,0.6);letter-spacing:0.1em;">04</span>
-        <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#F5F2EC;letter-spacing:-0.02em;margin:0;">Installation</h3>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 how-step-grid" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
-      <div>
-        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">04</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">Clean, respectful work scheduled around your liturgical calendar.</p>
-      </div>
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We schedule work around your liturgical calendar, weekdays, off-hours, or between services. We arrive on time, work cleanly, and treat your space with the respect it deserves. Most installations are completed in one to three days.</p>
-    </div>
-  </section>
-
-  <!-- Step 5 -->
-  <section style="position:relative; overflow:clip; background:#F5F2EC;">
-    <div style="position:sticky; top:71px; z-index:10; background:#203142; border-top:1px solid rgba(32,49,66,0.12); border-bottom:1px solid rgba(32,49,66,0.08); box-shadow:0 4px 16px rgba(32,49,66,0.06);">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10" style="padding-top:1.25rem; padding-bottom:1.25rem; display:flex; align-items:baseline; gap:1.5rem;">
-        <span class="font-display" style="font-size:1rem;font-weight:300;color:rgba(245,242,236,0.6);letter-spacing:0.1em;">05</span>
-        <h3 class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#F5F2EC;letter-spacing:-0.02em;margin:0;">Handoff &amp; Support</h3>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 how-step-grid" style="padding-top:4rem; padding-bottom:6rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;">
-      <div>
-        <p class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;color:rgba(32,49,66,0.06);line-height:1;letter-spacing:-0.04em;margin:0 0 1.5rem;">05</p>
-        <p class="font-display" style="font-size:1.15rem;font-weight:400;color:#C96A45;letter-spacing:-0.01em;line-height:1.4;">One switch. Full documentation. Ongoing support when you need it.</p>
-      </div>
-      <p class="font-body" style="font-size:1.05rem;line-height:1.9;color:rgba(32,49,66,0.62);">We design every system to be simple by intention. When the job is done, turning everything on should be a single switch — no trained operator required. We walk your team through exactly that before we leave, provide full documentation of everything installed, and remain available for questions and support after the job is done.</p>
-    </div>
-  </section>
-
+<!-- Projects CTA after How It Works -->
+<!-- TODO: swap 404.html → projects.html when project content is ready -->
+<div style="background:#F5F2EC;padding:0 0 5rem;text-align:center;">
+  <a href="404.html" class="btn-primary">See Our Projects</a>
 </div>
 
 
@@ -1745,6 +1864,8 @@
       <a href="#how"      class="footer-link">How It Works</a>
       <a href="#about"    class="footer-link">About</a>
       <a href="#faq"      class="footer-link">FAQ</a>
+      <!-- TODO: swap 404.html → projects.html when project content is ready -->
+      <a href="404.html"  class="footer-link">Projects</a>
       <a href="#contact"  class="footer-link">Contact</a>
     </nav>
     <style>
@@ -1814,29 +1935,241 @@
     nav.classList.toggle('scrolled', window.scrollY > 40);
   }, { passive: true });
 
-  // ── Mobile menu ───────────────────────────────────────────────
-  const menuBtn = document.getElementById('menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const b1 = document.getElementById('b1');
-  const b2 = document.getElementById('b2');
-  const b3 = document.getElementById('b3');
-  let open = false;
+  // ── Staggered menu ────────────────────────────────────────────
+  (function () {
+    const panel      = document.getElementById('sm-panel');
+    const preLayers  = Array.from(document.querySelectorAll('#sm-prelayers .sm-prelayer'));
+    const toggleBtn  = document.getElementById('sm-toggle');
+    const icon       = document.getElementById('sm-icon');
+    const textInner  = document.getElementById('sm-textInner');
+    const itemLabels = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
+    const contact    = panel.querySelector('.sm-panel-contact');
+    const hideables  = Array.from(document.querySelectorAll('.sm-nav-hideable'));
+    let smOpen = false, busy = false;
 
-  menuBtn.addEventListener('click', () => {
-    open = !open;
-    menuBtn.setAttribute('aria-expanded', open);
-    mobileMenu.classList.toggle('open', open);
-    b1.style.transform = open ? 'translateY(5.5px) rotate(45deg)' : '';
-    b2.style.opacity   = open ? '0' : '1';
-    b3.style.transform = open ? 'translateY(-5.5px) rotate(-45deg)' : '';
-  });
+    // Initial state — offscreen right
+    gsap.set([panel, ...preLayers], { xPercent: 100 });
+    gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
+    gsap.set(textInner, { yPercent: 0 });
+    if (itemLabels.length) gsap.set(itemLabels, { yPercent: 140, rotate: 10 });
+    if (contact) gsap.set(contact, { opacity: 0, y: 20 });
 
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    open = false;
-    menuBtn.setAttribute('aria-expanded', 'false');
-    mobileMenu.classList.remove('open');
-    b1.style.transform = ''; b2.style.opacity = '1'; b3.style.transform = '';
-  }));
+    function openMenu() {
+      if (busy) return; busy = true;
+      smOpen = true;
+      panel.setAttribute('aria-hidden', 'false');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      toggleBtn.setAttribute('aria-label', 'Close menu');
+      hideables.forEach(el => el.classList.add('sm-hidden'));
+
+      gsap.set(itemLabels, { yPercent: 140, rotate: 10 });
+      if (contact) gsap.set(contact, { opacity: 0, y: 20 });
+
+      const tl = gsap.timeline({ onComplete: () => { busy = false; } });
+
+      preLayers.forEach((el, i) => {
+        tl.to(el, { xPercent: 0, duration: 0.5, ease: 'power4.out' }, i * 0.07);
+      });
+
+      const panelStart = preLayers.length * 0.07 + 0.08;
+      tl.to(panel, { xPercent: 0, duration: 0.65, ease: 'power4.out' }, panelStart);
+
+      const itemsStart = panelStart + 0.65 * 0.15;
+      tl.to(itemLabels, {
+        yPercent: 0, rotate: 0, duration: 1, ease: 'power4.out',
+        stagger: 0.1
+      }, itemsStart);
+
+      if (contact) {
+        tl.to(contact, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, itemsStart + 0.2);
+      }
+
+      gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
+      gsap.set(textInner, { yPercent: 0 });
+      gsap.to(textInner, { yPercent: -50, duration: 0.5, ease: 'power4.out' });
+    }
+
+    function closeMenu() {
+      smOpen = false;
+      panel.setAttribute('aria-hidden', 'true');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      toggleBtn.setAttribute('aria-label', 'Open menu');
+      hideables.forEach(el => el.classList.remove('sm-hidden'));
+
+      gsap.to([...preLayers, panel], {
+        xPercent: 100, duration: 0.32, ease: 'power3.in', overwrite: 'auto',
+        onComplete: () => {
+          gsap.set(itemLabels, { yPercent: 140, rotate: 10 });
+          if (contact) gsap.set(contact, { opacity: 0, y: 20 });
+          busy = false;
+        }
+      });
+      gsap.to(icon, { rotate: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+      gsap.to(textInner, { yPercent: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+    }
+
+    toggleBtn.addEventListener('click', () => { smOpen ? closeMenu() : openMenu(); });
+    panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if (smOpen) closeMenu(); }));
+    document.addEventListener('mousedown', (e) => {
+      if (smOpen && !panel.contains(e.target) && !toggleBtn.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && smOpen) closeMenu(); });
+  })();
+
+  // ── FloatingLines shader (menu left panel) ───────────────────
+  (function () {
+    const container = document.getElementById('sm-floatinglines');
+    if (!container || typeof THREE === 'undefined') return;
+
+    const vertShader = `precision highp float;
+      void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+
+    const fragShader = `precision highp float;
+      uniform float iTime; uniform vec3 iResolution; uniform float animationSpeed;
+      uniform bool enableTop; uniform bool enableMiddle; uniform bool enableBottom;
+      uniform int topLineCount; uniform int middleLineCount; uniform int bottomLineCount;
+      uniform float topLineDistance; uniform float middleLineDistance; uniform float bottomLineDistance;
+      uniform vec3 topWavePosition; uniform vec3 middleWavePosition; uniform vec3 bottomWavePosition;
+      uniform vec2 iMouse; uniform bool interactive; uniform float bendRadius;
+      uniform float bendStrength; uniform float bendInfluence;
+      uniform vec3 lineGradient[8]; uniform int lineGradientCount;
+
+      mat2 rotate(float r) { return mat2(cos(r), sin(r), -sin(r), cos(r)); }
+
+      vec3 getLineColor(float t) {
+        if (lineGradientCount <= 0) return vec3(0.5);
+        if (lineGradientCount == 1) return lineGradient[0] * 0.5;
+        float s = clamp(t, 0.0, 0.9999) * float(lineGradientCount - 1);
+        int idx = int(floor(s)); float f = fract(s);
+        int idx2 = min(idx + 1, lineGradientCount - 1);
+        return mix(lineGradient[idx], lineGradient[idx2], f) * 0.5;
+      }
+
+      float wave(vec2 uv, float offset, vec2 screenUv, vec2 mouseUv, bool shouldBend) {
+        float time = iTime * animationSpeed;
+        float x_movement = time * 0.1;
+        float amp = sin(offset + time * 0.2) * 0.3;
+        float y = sin(uv.x + offset + x_movement) * amp;
+        if (shouldBend) {
+          vec2 d = screenUv - mouseUv;
+          float influence = exp(-dot(d, d) * bendRadius);
+          y += (mouseUv.y - screenUv.y) * influence * bendStrength * bendInfluence;
+        }
+        float m = uv.y - y;
+        return 0.0175 / max(abs(m) + 0.01, 1e-3) + 0.01;
+      }
+
+      void main() {
+        vec2 baseUv = (2.0 * gl_FragCoord.xy - iResolution.xy) / iResolution.y;
+        baseUv.y *= -1.0;
+        vec3 col = vec3(0.0);
+        vec2 mouseUv = vec2(0.0);
+        if (interactive) { mouseUv = (2.0 * iMouse - iResolution.xy) / iResolution.y; mouseUv.y *= -1.0; }
+
+        if (enableBottom) {
+          for (int i = 0; i < 10; ++i) {
+            if (i >= bottomLineCount) break;
+            float fi = float(i); float t = fi / max(float(bottomLineCount - 1), 1.0);
+            vec3 lc = getLineColor(t);
+            float angle = bottomWavePosition.z * log(length(baseUv) + 1.0);
+            vec2 ruv = baseUv * rotate(angle);
+            col += lc * wave(ruv + vec2(bottomLineDistance * fi + bottomWavePosition.x, bottomWavePosition.y), 1.5 + 0.2 * fi, baseUv, mouseUv, interactive) * 0.2;
+          }
+        }
+        if (enableMiddle) {
+          for (int i = 0; i < 10; ++i) {
+            if (i >= middleLineCount) break;
+            float fi = float(i); float t = fi / max(float(middleLineCount - 1), 1.0);
+            vec3 lc = getLineColor(t);
+            float angle = middleWavePosition.z * log(length(baseUv) + 1.0);
+            vec2 ruv = baseUv * rotate(angle);
+            col += lc * wave(ruv + vec2(middleLineDistance * fi + middleWavePosition.x, middleWavePosition.y), 2.0 + 0.15 * fi, baseUv, mouseUv, interactive);
+          }
+        }
+        if (enableTop) {
+          for (int i = 0; i < 10; ++i) {
+            if (i >= topLineCount) break;
+            float fi = float(i); float t = fi / max(float(topLineCount - 1), 1.0);
+            vec3 lc = getLineColor(t);
+            float angle = topWavePosition.z * log(length(baseUv) + 1.0);
+            vec2 ruv = baseUv * rotate(angle); ruv.x *= -1.0;
+            col += lc * wave(ruv + vec2(topLineDistance * fi + topWavePosition.x, topWavePosition.y), 1.0 + 0.2 * fi, baseUv, mouseUv, interactive) * 0.1;
+          }
+        }
+        gl_FragColor = vec4(col, 1.0);
+      }`;
+
+    function hexToVec3(hex) {
+      const h = hex.replace('#', '');
+      return new THREE.Vector3(parseInt(h.slice(0,2),16)/255, parseInt(h.slice(2,4),16)/255, parseInt(h.slice(4,6),16)/255);
+    }
+
+    // Brand gradient: terra -> cream -> slate
+    const gradientColors = ['#C96A45', '#e08a6a', '#BFC0C0', '#4F5075', '#203142'];
+    const gradArr = Array.from({ length: 8 }, () => new THREE.Vector3(1,1,1));
+    gradientColors.forEach((c, i) => gradArr[i].copy(hexToVec3(c)));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    camera.position.z = 1;
+
+    const uniforms = {
+      iTime: { value: 0 }, iResolution: { value: new THREE.Vector3(1, 1, 1) },
+      animationSpeed: { value: 1 },
+      enableTop: { value: true }, enableMiddle: { value: true }, enableBottom: { value: true },
+      topLineCount: { value: 6 }, middleLineCount: { value: 6 }, bottomLineCount: { value: 6 },
+      topLineDistance: { value: 0.05 }, middleLineDistance: { value: 0.05 }, bottomLineDistance: { value: 0.05 },
+      topWavePosition: { value: new THREE.Vector3(10.0, 0.5, -0.4) },
+      middleWavePosition: { value: new THREE.Vector3(5.0, 0.0, 0.2) },
+      bottomWavePosition: { value: new THREE.Vector3(2.0, -0.7, 0.4) },
+      iMouse: { value: new THREE.Vector2(-1000, -1000) },
+      interactive: { value: true }, bendRadius: { value: 5.0 },
+      bendStrength: { value: -0.5 }, bendInfluence: { value: 0 },
+      lineGradient: { value: gradArr }, lineGradientCount: { value: gradientColors.length }
+    };
+
+    const material = new THREE.ShaderMaterial({ uniforms, vertexShader: vertShader, fragmentShader: fragShader });
+    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.domElement.style.cssText = 'width:100%;height:100%;display:block;';
+    container.appendChild(renderer.domElement);
+
+    const clock = new THREE.Clock();
+    let targetMouse = new THREE.Vector2(-1000, -1000);
+    let currentMouse = new THREE.Vector2(-1000, -1000);
+    let targetInf = 0, currentInf = 0;
+    const DAMP = 0.05;
+
+    function resize() {
+      const w = container.clientWidth || 1, h = container.clientHeight || 1;
+      renderer.setSize(w, h, false);
+      const dpr = renderer.getPixelRatio();
+      uniforms.iResolution.value.set(w * dpr, h * dpr, 1);
+    }
+    resize();
+    new ResizeObserver(resize).observe(container);
+
+    renderer.domElement.addEventListener('pointermove', e => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      const dpr = renderer.getPixelRatio();
+      targetMouse.set((e.clientX - rect.left) * dpr, (rect.height - (e.clientY - rect.top)) * dpr);
+      targetInf = 1;
+    });
+    renderer.domElement.addEventListener('pointerleave', () => { targetInf = 0; });
+
+    function tick() {
+      uniforms.iTime.value = clock.getElapsedTime();
+      currentMouse.lerp(targetMouse, DAMP);
+      uniforms.iMouse.value.copy(currentMouse);
+      currentInf += (targetInf - currentInf) * DAMP;
+      uniforms.bendInfluence.value = currentInf;
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
 
   // ── Scroll reveal ─────────────────────────────────────────────
   const revealObs = new IntersectionObserver((entries) => {

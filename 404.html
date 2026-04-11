@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Coming Soon — Solea AV</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="brand_assets/Solea AV Ideas-03.png" />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=bespoke-serif@300,400,500&f[]=satoshi@300,400,500,700&display=block" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { navy:'#203142', slate:'#4F5075', silver:'#BFC0C0', cream:'#F5F2EC', terra:'#C96A45' }, fontFamily: { display:['"Bespoke Serif"','Georgia','serif'], body:['"Satoshi"','system-ui','sans-serif'] } } } }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Satoshi',system-ui,sans-serif;background:#203142;color:#F5F2EC;overflow:hidden;height:100vh}
+    .font-display{font-family:'Bespoke Serif',Georgia,serif}
+
+    /* Back link */
+    .back-link{
+      font-family:'Satoshi',sans-serif;font-size:0.78rem;font-weight:500;
+      letter-spacing:0.12em;text-transform:uppercase;
+      color:rgba(245,242,236,0.5);text-decoration:none;
+      display:inline-flex;align-items:center;gap:0.5rem;
+      transition:color 0.2s ease;
+    }
+    .back-link:hover{color:#F5F2EC}
+    .back-link svg{transition:transform 0.2s ease}
+    .back-link:hover svg{transform:translateX(-3px)}
+
+    /* ── Shiny nav button (matches header CTA) ─────────────── */
+    @property --snb-angle {
+      syntax: "<angle>"; initial-value: 0deg; inherits: false;
+    }
+    @property --snb-angle-offset {
+      syntax: "<angle>"; initial-value: 0deg; inherits: false;
+    }
+    @property --snb-percent {
+      syntax: "<percentage>"; initial-value: 5%; inherits: false;
+    }
+    @property --snb-shine {
+      syntax: "<color>"; initial-value: white; inherits: false;
+    }
+
+    .shiny-nav-btn {
+      text-align: center;
+      --snb-bg:              #203142;
+      --snb-bg-subtle:       #2d4459;
+      --snb-fg:              #F5F2EC;
+      --snb-highlight:       #C96A45;
+      --snb-highlight-subtle:#e08a6a;
+      --snb-duration:        3s;
+      --snb-transition:      700ms cubic-bezier(0.25,1,0.5,1);
+
+      isolation: isolate;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      padding: 0.6rem 1.5rem;
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--snb-fg);
+      border: 1px solid transparent;
+      border-radius: 0;
+      outline-offset: 4px;
+      background:
+        linear-gradient(var(--snb-bg), var(--snb-bg)) padding-box,
+        conic-gradient(
+          from calc(var(--snb-angle) - var(--snb-angle-offset)),
+          transparent,
+          var(--snb-highlight)       var(--snb-percent),
+          var(--snb-shine)           calc(var(--snb-percent) * 2),
+          var(--snb-highlight)       calc(var(--snb-percent) * 3),
+          transparent                calc(var(--snb-percent) * 4)
+        ) border-box;
+      box-shadow: inset 0 0 0 1px var(--snb-bg-subtle);
+      transition: var(--snb-transition);
+      transition-property: --snb-angle-offset, --snb-percent, --snb-shine, transform;
+      animation: snb-spin var(--snb-duration) linear infinite,
+                 snb-spin calc(var(--snb-duration) / 0.4) linear infinite reverse paused;
+      animation-composition: add;
+    }
+
+    .shiny-nav-btn::before,
+    .shiny-nav-btn::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset-inline-start: 50%;
+      inset-block-start: 50%;
+      translate: -50% -50%;
+      z-index: -1;
+    }
+
+    .shiny-nav-btn::before {
+      --sz: calc(100% - 6px);
+      width: var(--sz); height: var(--sz);
+      background: radial-gradient(circle at 2px 2px, white calc(0.5px), transparent 0) padding-box;
+      background-size: 4px 4px;
+      background-repeat: space;
+      mask-image: conic-gradient(from calc(var(--snb-angle) + 45deg), black, transparent 10% 90%, black);
+      border-radius: inherit;
+      opacity: 0.25;
+      animation: snb-spin var(--snb-duration) linear infinite,
+                 snb-spin calc(var(--snb-duration) / 0.4) linear infinite reverse paused;
+      animation-composition: add;
+    }
+
+    .shiny-nav-btn::after {
+      width: 100%; aspect-ratio: 1;
+      background: linear-gradient(-50deg, transparent, var(--snb-highlight), transparent);
+      mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+      opacity: 0.5;
+      animation: snb-shimmer var(--snb-duration) linear infinite paused;
+    }
+
+    .shiny-nav-btn:is(:hover, :focus-visible) {
+      --snb-percent: 20%;
+      --snb-angle-offset: 95deg;
+      --snb-shine: var(--snb-highlight-subtle);
+      transform: translateY(-2px);
+    }
+    .shiny-nav-btn:active { transform: translateY(0); }
+    .shiny-nav-btn:focus-visible { outline: 2px solid #C96A45; }
+
+    .shiny-nav-btn:is(:hover, :focus-visible),
+    .shiny-nav-btn:is(:hover, :focus-visible)::before,
+    .shiny-nav-btn:is(:hover, :focus-visible)::after {
+      animation-play-state: running;
+    }
+
+    @keyframes snb-spin    { to { --snb-angle: 360deg; } }
+    @keyframes snb-shimmer { to { rotate: 360deg; } }
+  </style>
+</head>
+<body>
+
+<!-- LetterGlitch background -->
+<div id="glitch-bg" style="position:fixed;inset:0;z-index:0;opacity:0.12;background:transparent;"></div>
+
+<!-- Header -->
+<header style="position:fixed;top:0;left:0;right:0;z-index:50;">
+  <div style="max-width:80rem;margin:0 auto;padding:0 1.5rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="index.html" aria-label="Solea AV">
+      <svg viewBox="50 350 900 370" style="height:40px;width:auto;" xmlns="http://www.w3.org/2000/svg">
+        <defs><style>.pl-2,.pl-3{fill:#F5F2EC;stroke:#F5F2EC;}.pl-2{stroke-miterlimit:10;stroke-width:10px;}.pl-3{font-family:'Satoshi Variable','Satoshi',Georgia,serif;font-size:308.07px;font-weight:300;font-variation-settings:'wght' 300;}</style></defs>
+        <text class="pl-3" transform="translate(136.74 597.27) scale(1.01 .97)"><tspan x="0" y="0">Sol</tspan><tspan x="404.49" y="0">e</tspan><tspan x="561.91" y="0">a</tspan></text>
+        <line class="pl-2" x1="689.5" y1="520.35" x2="331.5" y2="520.35"/>
+        <g><line class="pl-2" x1="370.75" y1="542.92" x2="416.83" y2="569.52"/><line class="pl-2" x1="367.19" y1="488.44" x2="420.4" y2="488.44"/><line class="pl-2" x1="393.79" y1="454.56" x2="393.79" y2="590.11"/></g>
+      </svg>
+    </a>
+    <a href="index.html" class="back-link">
+      Back to Home
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- Content -->
+<main style="position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:0 1.5rem;">
+
+  <span style="font-family:'Satoshi',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#C96A45;">Coming Soon</span>
+
+  <h1 class="font-display" style="font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;line-height:1.1;letter-spacing:-0.02em;margin-top:1rem;color:#F5F2EC;">
+    This page is on its way.
+  </h1>
+
+  <p style="font-family:'Satoshi',sans-serif;font-size:1rem;line-height:1.8;color:rgba(245,242,236,0.45);max-width:440px;margin-top:1.25rem;">
+    We're still building this out. In the meantime, feel free to get in touch — we'd love to hear about your parish.
+  </p>
+
+  <div style="display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap;justify-content:center;">
+    <a href="index.html#contact" class="shiny-nav-btn">Schedule a Consultation</a>
+    <a href="index.html" style="display:inline-block;text-decoration:none;font-family:'Satoshi',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#F5F2EC;padding:0.85rem 2.2rem;border:1px solid rgba(245,242,236,0.25);transition:border-color 0.3s ease,transform 0.2s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.borderColor='rgba(245,242,236,0.7)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(245,242,236,0.25)';this.style.transform=''">
+      Back to Home
+    </a>
+  </div>
+
+</main>
+
+<script>
+// ── LetterGlitch (vanilla) ────────────────────────────────────
+(function() {
+  var container = document.getElementById('glitch-bg');
+  if (!container) return;
+
+  var glitchColors = ['#203142', '#C96A45', '#4F5075', '#2d4459', '#e08a6a'];
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789';
+  var glitchSpeed = 50;
+  var fontSize = 16;
+  var charWidth = 10;
+  var charHeight = 20;
+
+  var canvas = document.createElement('canvas');
+  canvas.style.display = 'block';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  container.appendChild(canvas);
+
+  // Outer vignette
+  var vignette = document.createElement('div');
+  vignette.style.cssText = 'position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle,transparent 50%,rgba(32,49,66,0.9) 100%)';
+  container.appendChild(vignette);
+
+  var ctx = canvas.getContext('2d');
+  var letters = [];
+  var columns = 0, rows = 0;
+  var lastGlitch = Date.now();
+  var animId;
+
+  function randChar() {
+    return characters[Math.floor(Math.random() * characters.length)];
+  }
+  function randColor() {
+    return glitchColors[Math.floor(Math.random() * glitchColors.length)];
+  }
+  function parseColor(c) {
+    // Handle both hex (#abc123) and rgb(r,g,b) strings
+    var hex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
+    if (hex) return { r: parseInt(hex[1],16), g: parseInt(hex[2],16), b: parseInt(hex[3],16) };
+    var rgb = /rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/.exec(c);
+    if (rgb) return { r: +rgb[1], g: +rgb[2], b: +rgb[3] };
+    return null;
+  }
+  function lerp(a, b, t) {
+    return {
+      r: Math.round(a.r + (b.r - a.r) * t),
+      g: Math.round(a.g + (b.g - a.g) * t),
+      b: Math.round(a.b + (b.b - a.b) * t)
+    };
+  }
+
+  function resize() {
+    var dpr = window.devicePixelRatio || 1;
+    var rect = container.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    columns = Math.ceil(rect.width / charWidth);
+    rows = Math.ceil(rect.height / charHeight);
+    var total = columns * rows;
+    letters = [];
+    for (var i = 0; i < total; i++) {
+      letters.push({ char: randChar(), color: randColor(), target: randColor(), progress: 1 });
+    }
+    draw();
+  }
+
+  function draw() {
+    var rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, rect.height);
+    ctx.font = fontSize + 'px monospace';
+    ctx.textBaseline = 'top';
+    for (var i = 0; i < letters.length; i++) {
+      var x = (i % columns) * charWidth;
+      var y = Math.floor(i / columns) * charHeight;
+      ctx.fillStyle = letters[i].color;
+      ctx.fillText(letters[i].char, x, y);
+    }
+  }
+
+  function update() {
+    var count = Math.max(1, Math.floor(letters.length * 0.05));
+    for (var i = 0; i < count; i++) {
+      var idx = Math.floor(Math.random() * letters.length);
+      letters[idx].char = randChar();
+      letters[idx].target = randColor();
+      letters[idx].progress = 0;
+    }
+  }
+
+  function smoothTransitions() {
+    var needsDraw = false;
+    for (var i = 0; i < letters.length; i++) {
+      var l = letters[i];
+      if (l.progress < 1) {
+        l.progress = Math.min(1, l.progress + 0.05);
+        var s = parseColor(l.color);
+        var e = parseColor(l.target);
+        if (s && e) {
+          var c = lerp(s, e, l.progress);
+          l.color = 'rgb(' + c.r + ',' + c.g + ',' + c.b + ')';
+          needsDraw = true;
+        }
+      }
+    }
+    if (needsDraw) draw();
+  }
+
+  function animate() {
+    var now = Date.now();
+    if (now - lastGlitch >= glitchSpeed) {
+      update();
+      draw();
+      lastGlitch = now;
+    }
+    smoothTransitions();
+    animId = requestAnimationFrame(animate);
+  }
+
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      cancelAnimationFrame(animId);
+      resize();
+      animate();
+    }, 100);
+  });
+
+  resize();
+  animate();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Solea AV</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="brand_assets/Solea AV Ideas-03.png" />
+
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=bespoke-serif@300,400,500&f[]=satoshi@300,400,500,700&display=block" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:  '#203142',
+            slate: '#4F5075',
+            silver:'#BFC0C0',
+            cream: '#F5F2EC',
+            terra: '#C96A45',
+          },
+          fontFamily: {
+            display: ['"Bespoke Serif"', 'Georgia', 'serif'],
+            body:    ['"Satoshi"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Satoshi', system-ui, sans-serif;
+      background: #F5F2EC; color: #203142;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+    .font-display { font-family: 'Bespoke Serif', Georgia, serif; }
+
+    /* ── Back link ─────────────────────────────────────────────── */
+    .back-link {
+      font-family: 'Satoshi', sans-serif; font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(245,242,236,0.6); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: color 0.2s ease;
+    }
+    .back-link:hover { color: #F5F2EC; }
+    .back-link svg { transition: transform 0.2s ease; }
+    .back-link:hover svg { transform: translateX(-3px); }
+
+    /* ── Gallery carousel ──────────────────────────────────────── */
+    .gallery-track {
+      display: flex; gap: 1.25rem;
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; padding: 0 2rem 2rem;
+      justify-content: center;
+    }
+    .gallery-track::-webkit-scrollbar { display: none; }
+
+    .gallery-card {
+      flex: 0 0 320px; scroll-snap-align: start;
+      position: relative; border-radius: 12px; overflow: hidden;
+      min-height: 28rem; cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .gallery-card:hover { transform: translateY(-4px); }
+    @media (min-width: 768px) { .gallery-card { flex: 0 0 360px; } }
+
+    .gallery-card img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform 0.4s ease;
+    }
+    .gallery-card:hover img { transform: scale(1.05); }
+
+    .gallery-card .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(32,49,66,0.9) 0%, rgba(32,49,66,0.3) 50%, transparent 100%);
+    }
+    .gallery-card .card-content {
+      position: absolute; inset-x: 0; bottom: 0;
+      padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .gallery-card .card-title {
+      font-family: 'Bespoke Serif', Georgia, serif;
+      font-size: 1.25rem; font-weight: 400; color: #F5F2EC;
+      letter-spacing: -0.01em; line-height: 1.3;
+    }
+    .gallery-card .card-desc {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 0.82rem; line-height: 1.7;
+      color: rgba(245,242,236,0.6);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .gallery-card .card-cta {
+      font-family: 'Satoshi', sans-serif; font-size: 0.75rem;
+      font-weight: 500; color: #C96A45; display: inline-flex; align-items: center; gap: 0.35rem;
+      margin-top: 0.25rem;
+    }
+    .gallery-card .card-cta svg { transition: transform 0.2s ease; }
+    .gallery-card:hover .card-cta svg { transform: translateX(4px); }
+
+    /* ── Nav arrows ────────────────────────────────────────────── */
+    .gallery-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid rgba(32,49,66,0.2);
+      background: transparent; color: #203142; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .gallery-btn:hover { background: rgba(32,49,66,0.06); border-color: rgba(32,49,66,0.4); }
+    .gallery-btn:disabled { opacity: 0.3; cursor: default; }
+    .gallery-btn:focus-visible { outline: 2px solid #C96A45; outline-offset: 2px; }
+
+    /* ── Dots ──────────────────────────────────────────────────── */
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(32,49,66,0.15); border: none; cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .dot.active { background: #C96A45; }
+  </style>
+</head>
+<body>
+
+<!-- Dotted surface background -->
+<div id="dotted-surface" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.45;"></div>
+
+<!-- ── Top bar ──────────────────────────────────────────────── -->
+<header style="position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(32,49,66,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+  <div style="max-width:80rem;margin:0 auto;padding:0 1.5rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="index.html" aria-label="Solea AV">
+      <svg viewBox="50 350 900 370" style="height:40px;width:auto;" xmlns="http://www.w3.org/2000/svg">
+        <defs><style>.pl-2,.pl-3{fill:#F5F2EC;stroke:#F5F2EC;}.pl-2{stroke-miterlimit:10;stroke-width:10px;}.pl-3{font-family:'Satoshi Variable','Satoshi',Georgia,serif;font-size:308.07px;font-weight:300;font-variation-settings:'wght' 300;}</style></defs>
+        <text class="pl-3" transform="translate(136.74 597.27) scale(1.01 .97)"><tspan x="0" y="0">Sol</tspan><tspan x="404.49" y="0">e</tspan><tspan x="561.91" y="0">a</tspan></text>
+        <line class="pl-2" x1="689.5" y1="520.35" x2="331.5" y2="520.35"/>
+        <g><line class="pl-2" x1="370.75" y1="542.92" x2="416.83" y2="569.52"/><line class="pl-2" x1="367.19" y1="488.44" x2="420.4" y2="488.44"/><line class="pl-2" x1="393.79" y1="454.56" x2="393.79" y2="590.11"/></g>
+      </svg>
+    </a>
+    <a href="index.html" class="back-link">
+      Back to Home
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- ── Main content ─────────────────────────────────────────── -->
+<main style="padding-top:64px; position:relative; z-index:1;">
+
+  <!-- Hero -->
+  <section style="padding:5rem 1.5rem 3rem; max-width:80rem; margin:0 auto;">
+    <span style="font-family:'Satoshi',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#C96A45;">Our Work</span>
+    <h1 class="font-display" style="font-size:clamp(2.2rem,4vw,3.5rem);font-weight:300;line-height:1.1;letter-spacing:-0.02em;margin-top:0.75rem;color:#203142;">
+      Projects
+    </h1>
+    <p style="font-family:'Satoshi',sans-serif;font-size:0.95rem;line-height:1.8;color:rgba(32,49,66,0.55);max-width:520px;margin-top:1.25rem;">
+      A selection of installations across Orthodox, Catholic, and high-liturgical parishes. Each system is custom-designed for the unique acoustics and liturgical needs of the space.
+    </p>
+
+    <!-- Arrow controls -->
+    <div style="display:flex;gap:0.5rem;margin-top:2rem;" id="gallery-controls">
+      <button class="gallery-btn" id="prev-btn" aria-label="Previous slide">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <button class="gallery-btn" id="next-btn" aria-label="Next slide">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Gallery carousel -->
+  <section style="padding-bottom:2rem;">
+    <div class="gallery-track" id="gallery-track">
+
+      <a href="project-1.html" class="gallery-card" style="text-decoration:none;">
+        <img src="brand_assets/churchpic1.jpg" alt="St. George Orthodox Church" />
+        <div class="overlay"></div>
+        <div class="card-content">
+          <div class="card-title">St. George Orthodox Church</div>
+          <div class="card-desc">Full sound reinforcement and wireless microphone system for a historic Byzantine-style nave. Discreet speaker placement preserving the iconographic program.</div>
+          <div class="card-cta">View project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </a>
+
+      <a href="project-2.html" class="gallery-card" style="text-decoration:none;">
+        <img src="brand_assets/churchpic3.jpg" alt="Holy Trinity Cathedral" />
+        <div class="overlay"></div>
+        <div class="card-content">
+          <div class="card-title">Holy Trinity Cathedral</div>
+          <div class="card-desc">Livestreaming setup with multi-camera system and dedicated audio feed. Designed to capture the liturgy without visual disruption.</div>
+          <div class="card-cta">View project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </a>
+
+      <a href="project-3.html" class="gallery-card" style="text-decoration:none;">
+        <img src="brand_assets/churchpic5.jpg" alt="Assumption Catholic Parish" />
+        <div class="overlay"></div>
+        <div class="card-content">
+          <div class="card-title">Assumption Catholic Parish</div>
+          <div class="card-desc">Hearing loop installation and acoustic tuning for a large parish hall used for both worship overflow and community events.</div>
+          <div class="card-cta">View project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Dots -->
+    <div style="display:flex;justify-content:center;gap:0.5rem;margin-top:1.5rem;" id="gallery-dots"></div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding:4rem 1.5rem 5rem; text-align:center;">
+    <p class="font-display" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:300;color:#203142;letter-spacing:-0.02em;line-height:1.3;">
+      Have a project in mind?<br/>
+      <em style="color:rgba(32,49,66,0.4);">Let's talk about your parish.</em>
+    </p>
+    <a href="index.html#contact" style="
+      display:inline-block; margin-top:1.5rem;
+      font-family:'Satoshi',sans-serif; font-size:0.72rem;
+      font-weight:700; letter-spacing:0.15em; text-transform:uppercase;
+      background:#C96A45; color:#F5F2EC;
+      padding:0.85rem 2.2rem; text-decoration:none;
+      box-shadow:0 4px 18px rgba(201,106,69,0.28);
+      transition:background 0.3s ease,transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    " onmouseover="this.style.background='#b85c38';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#C96A45';this.style.transform=''">
+      Schedule a Consultation
+    </a>
+  </section>
+
+</main>
+
+<script>
+  // ── Gallery scroll carousel ──────────────────────────────────
+  const track = document.getElementById('gallery-track');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const dotsWrap = document.getElementById('gallery-dots');
+  const cards = Array.from(track.querySelectorAll('.gallery-card'));
+  const cardCount = cards.length;
+
+  // Create dots
+  cards.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', () => scrollToCard(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  function getVisibleIndex() {
+    const trackRect = track.getBoundingClientRect();
+    let closest = 0, minDist = Infinity;
+    cards.forEach((card, i) => {
+      const cardRect = card.getBoundingClientRect();
+      const dist = Math.abs(cardRect.left - trackRect.left - 32);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    return closest;
+  }
+
+  function scrollToCard(i) {
+    cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  }
+
+  function updateDots() {
+    const idx = getVisibleIndex();
+    dotsWrap.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx >= cardCount - 1;
+  }
+
+  prevBtn.addEventListener('click', () => {
+    const idx = Math.max(0, getVisibleIndex() - 1);
+    scrollToCard(idx);
+  });
+  nextBtn.addEventListener('click', () => {
+    const idx = Math.min(cardCount - 1, getVisibleIndex() + 1);
+    scrollToCard(idx);
+  });
+
+  track.addEventListener('scroll', updateDots, { passive: true });
+  updateDots();
+</script>
+
+<script>
+  // ── Dotted Surface (Three.js) ───────────────────────────────
+  (function() {
+    const container = document.getElementById('dotted-surface');
+    if (!container || typeof THREE === 'undefined') return;
+
+    const SEPARATION = 150;
+    const AMOUNTX = 40;
+    const AMOUNTY = 60;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xF5F2EC, 2000, 10000);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.set(0, 355, 1220);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+    container.appendChild(renderer.domElement);
+
+    const positions = [];
+    const colors = [];
+
+    for (var ix = 0; ix < AMOUNTX; ix++) {
+      for (var iy = 0; iy < AMOUNTY; iy++) {
+        positions.push(
+          ix * SEPARATION - (AMOUNTX * SEPARATION) / 2,
+          0,
+          iy * SEPARATION - (AMOUNTY * SEPARATION) / 2
+        );
+        // Brand-tinted dots: mix of navy and terra
+        colors.push(0.125, 0.192, 0.259); // navy #203142 as 0-1 RGB
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 6,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.55,
+      sizeAttenuation: true
+    });
+
+    scene.add(new THREE.Points(geometry, material));
+
+    var count = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      var posArr = geometry.attributes.position.array;
+      var i = 0;
+      for (var ix = 0; ix < AMOUNTX; ix++) {
+        for (var iy = 0; iy < AMOUNTY; iy++) {
+          posArr[i * 3 + 1] =
+            Math.sin((ix + count) * 0.3) * 50 +
+            Math.sin((iy + count) * 0.5) * 50;
+          i++;
+        }
+      }
+      geometry.attributes.position.needsUpdate = true;
+      renderer.render(scene, camera);
+      count += 0.06;
+    }
+
+    window.addEventListener('resize', function() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate();
+  })();
+</script>
+</body>
+</html>
